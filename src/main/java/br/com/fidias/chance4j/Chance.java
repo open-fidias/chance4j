@@ -35,6 +35,17 @@ import org.apache.commons.math3.random.RandomDataGenerator;
  */
 public class Chance {
 
+    public final static int MIN_SENTENCES_FOR_PARAGRAPH = 3;
+    public final static int MAX_SENTENCES_FOR_PARAGRAPH = 7;
+    public final static int MIN_WORDS_FOR_SENTENCE = 12;
+    public final static int MAX_WORDS_FOR_SENTENCE = 18;
+    public final static int MIN_SYLLABLES_FOR_WORD = 1;
+    public final static int MAX_SYLLABLES_FOR_WORD = 3;
+    public final static int MIN_CHARS_FOR_STRING = 5;
+    public final static int MAX_CHARS_FOR_STRING = 20;
+    public final static int MIN_CHAR_FOR_SYLLABLE = 2;
+    public final static int MAX_CHAR_FOR_SYLLABLE = 3;
+    
     private final RandomDataGenerator random;
 
     /**
@@ -142,6 +153,10 @@ public class Chance {
         }
         return result;
     }
+    
+    private float floating(Float min, Float max, int fixed) {
+        throw new UnsupportedOperationException();
+    }
 
     /**
      * Return a random floating point number.
@@ -237,6 +252,9 @@ public class Chance {
      * @throws ChanceException
      */
     public String string(TextOptions options, int length) throws ChanceException {
+        if (length <= 0) {
+            throw new ChanceException("Length cannot be less or equal than zero.");
+        }
         char[] characters = characters(options, length);
         return String.valueOf(characters);
     }
@@ -266,7 +284,7 @@ public class Chance {
         options.setCasing(TextOptions.Casing.lower);
         options.setPoolType(TextOptions.PoolType.custom);
         try {
-            int length = natural(2, 3);
+            int length = natural(MIN_CHAR_FOR_SYLLABLE, MAX_CHAR_FOR_SYLLABLE);
             char chr = 0;
             String pool;
             for (int i = 0; i < length; i++) {
@@ -334,7 +352,7 @@ public class Chance {
     public String word() {
         String result = "";
         try {
-            int natural = natural(1, 3);
+            int natural = natural(MIN_SYLLABLES_FOR_WORD, MAX_SYLLABLES_FOR_WORD);
             result = word(natural);
         } catch (Exception e) {
             // it's never throw
@@ -384,7 +402,7 @@ public class Chance {
      * @throws ChanceException
      */
     public String sentence() throws ChanceException {
-        int numWords = natural(12, 18);
+        int numWords = natural(MIN_WORDS_FOR_SENTENCE, MAX_WORDS_FOR_SENTENCE);
         return sentence(numWords);
     }
 
@@ -409,7 +427,7 @@ public class Chance {
      * @throws ChanceException
      */
     public String paragraph() throws ChanceException {
-        int numSentences = natural(3, 7);
+        int numSentences = natural(MIN_SENTENCES_FOR_PARAGRAPH, MAX_SENTENCES_FOR_PARAGRAPH);
         return paragraph(numSentences);
     }
 }
