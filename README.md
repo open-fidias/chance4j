@@ -2,6 +2,8 @@
 
 **Chance4j** - Random generator helper for Java.
 
+[![Build Status](https://travis-ci.org/open-fidias/chance4j.svg?branch=master)](https://travis-ci.org/open-fidias/chance4j)
+
 Homepage: <https://github.com/open-fidias/chance4j>
 
 Chance4j is a minimalist generator of random strings, numbers, etc. to
