@@ -8,6 +8,7 @@ dist/
 nbdist/
 nbactions.xml
 .nb-gradle/
+nb-configuration.xml
 
 
 ### Maven ###
