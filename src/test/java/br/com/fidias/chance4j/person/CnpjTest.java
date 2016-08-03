@@ -20,13 +20,49 @@
  * You should have received a copy of the GNU General Public License along with
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package br.com.fidias.chance4j.number;
+package br.com.fidias.chance4j.person;
+
+import org.junit.Ignore;
 
 /**
  *
  * @author atila
  */
-public interface Number {
+@Ignore
+public class CnpjTest {
     
-    public final static String NUMBERS = "0123456789";
+    public static boolean isValid(String cnpj) {
+        int i;
+        int j;
+        int digit;
+        int coeficient;
+        int sum;
+        int[] foundDv = {0, 0};
+
+        int dv1 = Integer.parseInt(String.valueOf(cnpj.charAt(cnpj.length() - 2)));
+        int dv2 = Integer.parseInt(String.valueOf(cnpj.charAt(cnpj.length() - 1)));
+
+        for (j = 0; j < 2; j++) {
+            sum = 0;
+            coeficient = 2;
+
+            for (i = cnpj.length() - 3 + j; i >= 0; i--) {
+                digit = Integer.parseInt(String.valueOf(cnpj.charAt(i)));
+                sum += digit * coeficient;
+                coeficient++;
+
+                if (coeficient > 9) {
+                    coeficient = 2;
+                }
+            }
+
+            foundDv[j] = 11 - sum % 11;
+
+            if (foundDv[j] >= 10) {
+                foundDv[j] = 0;
+            }
+        }
+
+        return dv1 == foundDv[0] && dv2 == foundDv[1];
+    }
 }
