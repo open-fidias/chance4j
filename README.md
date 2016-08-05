@@ -7,7 +7,7 @@
 Homepage: <https://github.com/open-fidias/chance4j>
 
 Chance4j is a minimalist generator of random strings, numbers, etc. to
-help reduce some monotony particularly while writing automated tests o
+help reduce some monotony particularly while writing automated tests or
 anywhere else you need anything random.
 
 Based on the <http://chancejs.com> by [Victor Quinn](https://github.com/victorquinn) and [contributors](https://github.com/chancejs/chancejs/graphs/contributors).

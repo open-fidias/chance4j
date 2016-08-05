@@ -2,8 +2,9 @@
  * Chance4j is a minimalist generator of random strings, numbers, etc. to
  * help reduce some monotony particularly while writing automated tests or
  * anywhere else you need anything random.
- * Based on the <http://chancejs.com> by Victor Quinn and contributors Copyright
- * (C) 2016 Átila Camurça <camurca.home@gmail.com>
+ * Based on the <http://chancejs.com> by Victor Quinn and contributors
+ *
+ * Copyright (C) 2016 Átila Camurça <camurca.home@gmail.com>
  * Fidias Free Source Team <fidiascom@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify it under
@@ -24,7 +25,6 @@ package br.com.fidias.chance4j;
 import static br.com.fidias.chance4j.AbstractChanceTesting.chance;
 import java.util.Arrays;
 import java.util.Collection;
-import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;

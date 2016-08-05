@@ -20,13 +20,12 @@
  * You should have received a copy of the GNU General Public License along with
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package br.com.fidias.chance4j.number;
+package br.com.fidias.chance4j.person;
 
 /**
  *
  * @author atila
  */
-public interface Number {
-    
-    public final static String NUMBERS = "0123456789";
+public enum CnpjOptions {
+    masked, unmasked
 }
