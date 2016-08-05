@@ -22,6 +22,8 @@
  */
 package br.com.fidias.chance4j;
 
+import br.com.fidias.chance4j.person.Cnpj;
+import br.com.fidias.chance4j.person.CnpjOptions;
 import br.com.fidias.chance4j.person.Cpf;
 import br.com.fidias.chance4j.person.CpfOptions;
 import br.com.fidias.chance4j.text.TextOptions;
@@ -439,25 +441,27 @@ public class Chance {
      * Return a random valid Brazilian CPF.
      *
      * @return A random CPF
-     * @throws ChanceException
      */
-    public long cpf() throws ChanceException {
+    public long cpf() {
         int[] firstNineDigits = new int[9];
-        int length = firstNineDigits.length;
-        for (int i = 0; i < length; i++) {
-            firstNineDigits[i] = natural(9);
-        }
-
-        int d1 = Cpf.calculateVerifyingDigitOne(firstNineDigits);
-        int d2 = Cpf.calculateVerifyingDigitTwo(firstNineDigits, d1);
-
         StringBuilder numberRepresentation = new StringBuilder();
-        for (int i = 0; i < length; i++) {
-            numberRepresentation.append(firstNineDigits[i]);
+        try {
+            int length = firstNineDigits.length;
+            for (int i = 0; i < length; i++) {
+                firstNineDigits[i] = natural(9);
+            }
 
+            int d1 = Cpf.calculateVerifyingDigitOne(firstNineDigits);
+            int d2 = Cpf.calculateVerifyingDigitTwo(firstNineDigits, d1);
+
+            for (int i = 0; i < length; i++) {
+                numberRepresentation.append(firstNineDigits[i]);
+            }
+            numberRepresentation.append(d1);
+            numberRepresentation.append(d2);
+        } catch (ChanceException e) {
+            // it's never throw
         }
-        numberRepresentation.append(d1);
-        numberRepresentation.append(d2);
         return Long.parseLong(numberRepresentation.toString());
     }
 
@@ -467,9 +471,8 @@ public class Chance {
      *
      * @param options
      * @return A random valid CPF
-     * @throws ChanceException
      */
-    public String cpfAsText(CpfOptions options) throws ChanceException {
+    public String cpfAsText(CpfOptions options) {
         long cpf = cpf();
         String unmasked = new DecimalFormat("00000000000").format(cpf);
         switch (options) {
@@ -485,10 +488,67 @@ public class Chance {
     /**
      * Return a random valid masked Brazilian CPF.
      *
-     * @return
-     * @throws ChanceException
+     * @return A random valid masked CPF
      */
-    public String cpfAsText() throws ChanceException {
+    public String cpfAsText() {
         return cpfAsText(CpfOptions.masked);
+    }
+
+    /**
+     * Return a random valid Brazilian CNPJ.
+     *
+     * @return A random CNPJ
+     */
+    public long cnpj() {
+        int[] firstEightDigits = new int[8];
+        StringBuilder numberRepresentation = new StringBuilder();
+        try {
+            int length = firstEightDigits.length;
+            for (int i = 0; i < length; i++) {
+                firstEightDigits[i] = natural(9);
+            }
+
+            int d1 = Cnpj.calculateVerifyingDigitOne(firstEightDigits);
+            int d2 = Cnpj.calculateVerifyingDigitTwo(firstEightDigits, d1);
+
+            for (int i = 0; i < length; i++) {
+                numberRepresentation.append(firstEightDigits[i]);
+            }
+            numberRepresentation.append("0001");
+            numberRepresentation.append(d1);
+            numberRepresentation.append(d2);
+        } catch (ChanceException e) {
+            // it's never throw
+        }
+        return Long.parseLong(numberRepresentation.toString());
+    }
+
+    /**
+     * Return a random valid Brazilian CNPJ, either unmasked (00000000000000) or
+     * masked (00.000.000/0000-00).
+     *
+     * @param options
+     * @return A random CNPJ
+     */
+    public String cnpjAsText(CnpjOptions options) {
+        long cnpj = cnpj();
+        String unmasked = new DecimalFormat("00000000000000").format(cnpj);
+        switch (options) {
+            case unmasked:
+                return unmasked;
+            case masked:
+                return Cnpj.format(unmasked);
+            default:
+                throw new AssertionError();
+        }
+    }
+
+    /**
+     * Return a random valid masked Brazilian CNPJ.
+     *
+     * @return A random CNPJ
+     */
+    public String cnpjAsText() {
+        return cnpjAsText(CnpjOptions.masked);
     }
 }

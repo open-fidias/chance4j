@@ -35,7 +35,23 @@ public class CpfTest extends AbstractChanceTesting {
     
     private String cpf;
     
-    public static boolean isValid(String cpf) {
+    @Test
+    public void randomValidCpf() {
+        for (int i = 0; i < 1000; i++) {
+            cpf = chance.cpfAsText(CpfOptions.unmasked);
+            assertTrue("random valid cpf", isValid(cpf));
+        }
+    }
+    
+    @Test
+    public void randomValidMaskedCpf() {
+        for (int i = 0; i < 1000; i++) {
+            cpf = chance.cpfAsText(CpfOptions.masked);
+            assertTrue("random valid cpf", isMasked(cpf));
+        }
+    }
+    
+    private static boolean isValid(String cpf) {
         int i;
         int j;
         int digit;
@@ -64,22 +80,6 @@ public class CpfTest extends AbstractChanceTesting {
         }
 
         return dv1 == foundDv[0] && dv2 == foundDv[1];
-    }
-    
-    @Test
-    public void randomValidCpf() throws ChanceException {
-        for (int i = 0; i < 1000; i++) {
-            cpf = chance.cpfAsText(CpfOptions.unmasked);
-            assertTrue("random valid cpf", isValid(cpf));
-        }
-    }
-    
-    @Test
-    public void randomValidMaskedCpf() throws ChanceException {
-        for (int i = 0; i < 1000; i++) {
-            cpf = chance.cpfAsText(CpfOptions.masked);
-            assertTrue("random valid cpf", isMasked(cpf));
-        }
     }
     
     private boolean isMasked(String cpf) {
