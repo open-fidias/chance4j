@@ -26,6 +26,7 @@ import br.com.fidias.chance4j.person.Cnpj;
 import br.com.fidias.chance4j.person.CnpjOptions;
 import br.com.fidias.chance4j.person.Cpf;
 import br.com.fidias.chance4j.person.CpfOptions;
+import br.com.fidias.chance4j.person.Gender;
 import br.com.fidias.chance4j.text.TextOptions;
 import br.com.fidias.chance4j.text.Character;
 import java.math.BigDecimal;
@@ -550,5 +551,31 @@ public class Chance {
      */
     public String cnpjAsText() {
         return cnpjAsText(CnpjOptions.masked);
+    }
+
+    /**
+     * Return a random gender, either Male or Female.
+     *
+     * @return A random gender
+     */
+    public Gender gender() {
+        Gender[] values = Gender.values();
+        int length = values.length;
+        int natural = 0;
+        try {
+            natural = natural(length - 1);
+        } catch (ChanceException e) {
+            // it's never throw
+        }
+        return values[natural];
+    }
+
+    /**
+     * Return a random gender, either Male or Female as plain text.
+     *
+     * @return A random gender
+     */
+    public String genderAsText() {
+        return gender().name();
     }
 }
