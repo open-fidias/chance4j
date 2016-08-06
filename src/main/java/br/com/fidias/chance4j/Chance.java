@@ -26,7 +26,9 @@ import br.com.fidias.chance4j.person.Cnpj;
 import br.com.fidias.chance4j.person.CnpjOptions;
 import br.com.fidias.chance4j.person.Cpf;
 import br.com.fidias.chance4j.person.CpfOptions;
+import br.com.fidias.chance4j.person.FirstName;
 import br.com.fidias.chance4j.person.Gender;
+import br.com.fidias.chance4j.person.name.Nationality;
 import br.com.fidias.chance4j.text.TextOptions;
 import br.com.fidias.chance4j.text.Character;
 import java.math.BigDecimal;
@@ -577,5 +579,76 @@ public class Chance {
      */
     public String genderAsText() {
         return gender().name();
+    }
+
+    /**
+     * Generate a random first name, specifying a gender and a nationality.
+     *
+     * @param gender Either Male or Female
+     * @param nationality A nationality
+     * @return A random first name
+     * @throws ChanceException
+     */
+    public String firstName(Gender gender, Nationality nationality) throws ChanceException {
+        String[] names = FirstName.getFirstNameList(gender, nationality);
+        int natural = 0;
+        try {
+            natural = natural(names.length - 1);
+        } catch (ChanceException e) {
+            // it's never throw
+        }
+        return names[natural];
+    }
+
+    /**
+     * Generate a random first name, specifying a gender.
+     *
+     * @param gender Either Male or Female
+     * @return A random first name
+     * @throws ChanceException
+     */
+    public String firstName(Gender gender) throws ChanceException {
+        try {
+            Nationality[] values = Nationality.values();
+            int nacionalityId = natural(values.length - 1);
+            return firstName(gender, values[nacionalityId]);
+        } catch (ChanceException e) {
+            throw e;
+        }
+    }
+
+    /**
+     * Generate a random first name, specifying a nationality.
+     *
+     * @param nationality A nationality
+     * @return A random first name
+     * @throws ChanceException
+     */
+    public String firstName(Nationality nationality) throws ChanceException {
+        try {
+            Gender[] values = Gender.values();
+            int genderId = natural(values.length - 1);
+            return firstName(values[genderId], nationality);
+        } catch (ChanceException e) {
+            throw e;
+        }
+    }
+
+    /**
+     * Generate a random first name.
+     *
+     * @return A random first name
+     * @throws ChanceException
+     */
+    public String firstName() throws ChanceException {
+        try {
+            Gender[] genders = Gender.values();
+            int genderId = natural(genders.length - 1);
+            Nationality[] nationalities = Nationality.values();
+            int nacionalityId = natural(nationalities.length - 1);
+            return firstName(genders[genderId], nationalities[nacionalityId]);
+        } catch (ChanceException e) {
+            throw e;
+        }
     }
 }
