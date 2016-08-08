@@ -27,13 +27,14 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 /**
+ * Implementation based on <https://github.com/danielfariati/cpf-cnpj-validator>
  *
  * @author atila
  */
 public class CnpjTest extends AbstractChanceTesting {
-    
+
     private String cnpj;
-    
+
     @Test
     public void randomValidCnpj() {
         for (int i = 0; i < 1000; i++) {
@@ -41,7 +42,7 @@ public class CnpjTest extends AbstractChanceTesting {
             assertTrue("random valid cnpj", isValid(cnpj));
         }
     }
-    
+
     @Test
     public void randomValidMaskedCnpj() {
         for (int i = 0; i < 1000; i++) {
@@ -49,7 +50,7 @@ public class CnpjTest extends AbstractChanceTesting {
             assertTrue("random valid cnpj", isMasked(cnpj));
         }
     }
-    
+
     private static boolean isValid(String cnpj) {
         int i;
         int j;
@@ -84,7 +85,7 @@ public class CnpjTest extends AbstractChanceTesting {
 
         return dv1 == foundDv[0] && dv2 == foundDv[1];
     }
-    
+
     private boolean isMasked(String cnpj) {
         return cnpj.matches("\\d{2}\\.\\d{3}\\.\\d{3}/\\d{4}-\\d{2}");
     }

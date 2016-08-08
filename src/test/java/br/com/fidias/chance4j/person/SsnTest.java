@@ -20,57 +20,30 @@
  * You should have received a copy of the GNU General Public License along with
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package br.com.fidias.chance4j.text;
+package br.com.fidias.chance4j.person;
+
+import br.com.fidias.chance4j.AbstractChanceTesting;
+import br.com.fidias.chance4j.ChanceException;
+import static org.junit.Assert.assertTrue;
+import org.junit.Test;
 
 /**
  *
  * @author atila
  */
-public class TextOptions {
+public class SsnTest extends AbstractChanceTesting {
 
-    public enum Casing {
-        lower, upper, both
-    }
-    
-    public enum PoolType {
-        custom, alpha, alphanumeric, symbols, any, numeric
-    }
-    
-    private Casing casing;
-    private PoolType poolType;
-    private String pool;
-    
-    /**
-     * Create TextOptions with the default values:
-     * casing - both (lower and upper)
-     * poolType - alphanumeric
-     */
-    public TextOptions() {
-        this.casing = Casing.both;
-        this.poolType = PoolType.alphanumeric;
+    private String ssn;
+
+    @Test
+    public void randomSsn() throws ChanceException {
+        for (int i = 0; i < 1000; i++) {
+            ssn = chance.ssn();
+            assertTrue("random masked ssn", isMasked(ssn));
+        }
     }
 
-    public Casing getCasing() {
-        return casing;
-    }
-
-    public void setCasing(Casing casing) {
-        this.casing = casing;
-    }
-
-    public PoolType getPoolType() {
-        return poolType;
-    }
-
-    public void setPoolType(PoolType poolType) {
-        this.poolType = poolType;
-    }
-
-    public String getPool() {
-        return pool;
-    }
-
-    public void setPool(String pool) {
-        this.pool = pool;
+    private boolean isMasked(String cnpj) {
+        return cnpj.matches("\\d{3}\\-\\d{2}\\-\\d{4}");
     }
 }

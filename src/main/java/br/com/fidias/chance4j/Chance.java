@@ -30,6 +30,8 @@ import br.com.fidias.chance4j.person.FirstName;
 import br.com.fidias.chance4j.person.Gender;
 import br.com.fidias.chance4j.person.LastName;
 import br.com.fidias.chance4j.person.NamePrefix;
+import br.com.fidias.chance4j.person.Ssn;
+import br.com.fidias.chance4j.person.SsnOptions;
 import br.com.fidias.chance4j.person.name.NameOptions;
 import br.com.fidias.chance4j.person.name.Nationality;
 import br.com.fidias.chance4j.person.name.PrefixSuffixOptions;
@@ -806,5 +808,58 @@ public class Chance {
     public String name() {
         NameOptions nameOptions = new NameOptions();
         return name(nameOptions, null);
+    }
+
+    /**
+     * Generate a random social security number.
+     *
+     * @param options size (four or nine) and dash options
+     * @return a random social security number
+     * @throws ChanceException
+     */
+    public String ssn(SsnOptions options) throws ChanceException {
+        TextOptions textOptions = new TextOptions();
+        textOptions.setPoolType(TextOptions.PoolType.numeric);
+        String ssn;
+        switch (options.getLength()) {
+            case four:
+                ssn = string(textOptions, 4);
+                break;
+            case nine:
+                ssn = string(textOptions, 3) + string(textOptions, 2)
+                        + string(textOptions, 4);
+                break;
+            default:
+                throw new AssertionError();
+        }
+        return options.isDashes() ? Ssn.format(ssn) : ssn;
+    }
+
+    /**
+     * Generate a random social security number.
+     *
+     * @param length either four or nine
+     * @return a random social security number
+     * @throws ChanceException
+     */
+    public long ssn(SsnOptions.Length length) throws ChanceException {
+        SsnOptions options = new SsnOptions();
+        options.setLength(length);
+        options.setDashes(false);
+        String ssn = ssn(options);
+        return Long.parseLong(ssn);
+    }
+
+    /**
+     * Generate a random social security number.
+     *
+     * @return a random social security number
+     * @throws ChanceException
+     */
+    public String ssn() throws ChanceException {
+        SsnOptions options = new SsnOptions();
+        options.setLength(SsnOptions.Length.nine);
+        options.setDashes(true);
+        return ssn(options);
     }
 }
