@@ -30,6 +30,7 @@ import br.com.fidias.chance4j.person.FirstName;
 import br.com.fidias.chance4j.person.Gender;
 import br.com.fidias.chance4j.person.LastName;
 import br.com.fidias.chance4j.person.NamePrefix;
+import br.com.fidias.chance4j.person.name.NameOptions;
 import br.com.fidias.chance4j.person.name.Nationality;
 import br.com.fidias.chance4j.person.name.PrefixSuffixOptions;
 import br.com.fidias.chance4j.text.TextOptions;
@@ -576,6 +577,40 @@ public class Chance {
     }
 
     /**
+     * Return a random Nationality.
+     *
+     * @return A random nationality
+     */
+    public Nationality nationality() {
+        Nationality[] values = Nationality.values();
+        int length = values.length;
+        int natural = 0;
+        try {
+            natural = natural(length - 1);
+        } catch (ChanceException e) {
+            // it's never throw
+        }
+        return values[natural];
+    }
+
+    /**
+     * Return a random Prefix or Suffix name option.
+     *
+     * @return A random Prefix or Suffix option
+     */
+    public PrefixSuffixOptions prefixSuffixOptions() {
+        PrefixSuffixOptions[] values = PrefixSuffixOptions.values();
+        int length = values.length;
+        int natural = 0;
+        try {
+            natural = natural(length - 1);
+        } catch (ChanceException e) {
+            // it's never throw
+        }
+        return values[natural];
+    }
+
+    /**
      * Return a random gender, either Male or Female as plain text.
      *
      * @return A random gender
@@ -609,15 +644,8 @@ public class Chance {
      * @return A random first name
      */
     public String firstName(Gender gender) {
-        Nationality[] values = Nationality.values();
-        int nacionalityId = 0;
-        try {
-            nacionalityId = natural(values.length - 1);
-        } catch (ChanceException e) {
-            // it's never throw
-        }
-        return firstName(gender, values[nacionalityId]);
-
+        Nationality nacionality = nationality();
+        return firstName(gender, nacionality);
     }
 
     /**
@@ -627,14 +655,8 @@ public class Chance {
      * @return A random first name
      */
     public String firstName(Nationality nationality) {
-        Gender[] values = Gender.values();
-        int genderId = 0;
-        try {
-            genderId = natural(values.length - 1);
-        } catch (ChanceException e) {
-            // it's never throw
-        }
-        return firstName(values[genderId], nationality);
+        Gender gender = gender();
+        return firstName(gender, nationality);
     }
 
     /**
@@ -643,16 +665,9 @@ public class Chance {
      * @return A random first name
      */
     public String firstName() {
-        Gender[] genders = Gender.values();
-        Nationality[] nationalities = Nationality.values();
-        int genderId = 0, nacionalityId = 0;
-        try {
-            genderId = natural(genders.length - 1);
-            nacionalityId = natural(nationalities.length - 1);
-        } catch (ChanceException e) {
-            // it's never throw
-        }
-        return firstName(genders[genderId], nationalities[nacionalityId]);
+        Gender gender = gender();
+        Nationality nacionality = nationality();
+        return firstName(gender, nacionality);
     }
 
     /**
@@ -678,14 +693,8 @@ public class Chance {
      * @return A random last name
      */
     public String lastName() {
-        Nationality[] values = Nationality.values();
-        int nacionalityId = 0;
-        try {
-            nacionalityId = natural(values.length - 1);
-        } catch (ChanceException e) {
-            // it's never throw
-        }
-        return lastName(values[nacionalityId]);
+        Nationality nacionality = nationality();
+        return lastName(nacionality);
     }
 
     /**
@@ -713,14 +722,8 @@ public class Chance {
      * @return A random name prefix
      */
     public String namePrefix(PrefixSuffixOptions options) {
-        Gender[] genders = Gender.values();
-        int genderId = 0;
-        try {
-            genderId = natural(genders.length - 1);
-        } catch (ChanceException e) {
-            // it's never throw
-        }
-        return namePrefix(genders[genderId], options);
+        Gender gender = gender();
+        return namePrefix(gender, options);
     }
 
     /**
@@ -729,13 +732,79 @@ public class Chance {
      * @return A random name prefix
      */
     public String namePrefix() {
-        int optionsId = 0;
-        PrefixSuffixOptions[] values = PrefixSuffixOptions.values();
-        try {
-            optionsId = natural(values.length - 1);
-        } catch (ChanceException e) {
-            // it's never throw
+        PrefixSuffixOptions option = prefixSuffixOptions();
+        return namePrefix(option);
+    }
+
+    /**
+     * Generate a random name, especifying a gender, a nationality and options.
+     *
+     * @param gender Either Male or Female
+     * @param nationality A nationality
+     * @param nameOptions Name Options
+     * @param psOptions Prefix options
+     * @return A random name
+     */
+    public String name(Gender gender, Nationality nationality,
+            NameOptions nameOptions, PrefixSuffixOptions psOptions) {
+        String name;
+        String first = firstName(gender, nationality);
+        String last = lastName(nationality);
+        String middle = " ";
+        if (nameOptions.isMiddle()) {
+            middle = " " + firstName(gender, nationality) + " ";
+        } else if (nameOptions.isMiddleInitial()) {
+            TextOptions textOptions = new TextOptions();
+            textOptions.setCasing(TextOptions.Casing.upper);
+            textOptions.setPoolType(TextOptions.PoolType.alpha);
+            try {
+                middle = " " + String.valueOf(character(textOptions)) + ". ";
+            } catch (ChanceException e) {
+                // it's never throw
+            }
         }
-        return namePrefix(values[optionsId]);
+
+        name = first + middle + last;
+        if (nameOptions.isPrefix()) {
+            name = namePrefix(gender, psOptions) + " " + name;
+        }
+
+        return name;
+    }
+
+    /**
+     * Generate a random name, especifying a nationality and options.
+     *
+     * @param nationality A nationality
+     * @param nameOptions Name Options
+     * @param psOptions Prefix options
+     * @return A random name
+     */
+    public String name(Nationality nationality,
+            NameOptions nameOptions, PrefixSuffixOptions psOptions) {
+        Gender gender = gender();
+        return name(gender, nationality, nameOptions, psOptions);
+    }
+
+    /**
+     * Generate a random name.
+     *
+     * @param nameOptions Name Options
+     * @param psOptions Prefix options
+     * @return A random name
+     */
+    public String name(NameOptions nameOptions, PrefixSuffixOptions psOptions) {
+        Nationality nationality = nationality();
+        return name(nationality, nameOptions, psOptions);
+    }
+
+    /**
+     * Generate a random name.
+     *
+     * @return A random name
+     */
+    public String name() {
+        NameOptions nameOptions = new NameOptions();
+        return name(nameOptions, null);
     }
 }
