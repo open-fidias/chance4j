@@ -20,7 +20,7 @@
  * You should have received a copy of the GNU General Public License along with
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package br.com.fidias.chance4j.person.name;
+package br.com.fidias.chance4j.person.name.it;
 
 import br.com.fidias.chance4j.person.Gender;
 import java.util.EnumMap;

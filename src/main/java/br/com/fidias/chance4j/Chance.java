@@ -28,6 +28,7 @@ import br.com.fidias.chance4j.person.Cpf;
 import br.com.fidias.chance4j.person.CpfOptions;
 import br.com.fidias.chance4j.person.FirstName;
 import br.com.fidias.chance4j.person.Gender;
+import br.com.fidias.chance4j.person.LastName;
 import br.com.fidias.chance4j.person.name.Nationality;
 import br.com.fidias.chance4j.text.TextOptions;
 import br.com.fidias.chance4j.text.Character;
@@ -587,9 +588,8 @@ public class Chance {
      * @param gender Either Male or Female
      * @param nationality A nationality
      * @return A random first name
-     * @throws ChanceException
      */
-    public String firstName(Gender gender, Nationality nationality) throws ChanceException {
+    public String firstName(Gender gender, Nationality nationality) {
         String[] names = FirstName.getFirstNameList(gender, nationality);
         int natural = 0;
         try {
@@ -605,16 +605,17 @@ public class Chance {
      *
      * @param gender Either Male or Female
      * @return A random first name
-     * @throws ChanceException
      */
-    public String firstName(Gender gender) throws ChanceException {
+    public String firstName(Gender gender) {
+        Nationality[] values = Nationality.values();
+        int nacionalityId = 0;
         try {
-            Nationality[] values = Nationality.values();
-            int nacionalityId = natural(values.length - 1);
-            return firstName(gender, values[nacionalityId]);
+            nacionalityId = natural(values.length - 1);
         } catch (ChanceException e) {
-            throw e;
+            // it's never throw
         }
+        return firstName(gender, values[nacionalityId]);
+
     }
 
     /**
@@ -622,33 +623,66 @@ public class Chance {
      *
      * @param nationality A nationality
      * @return A random first name
-     * @throws ChanceException
      */
-    public String firstName(Nationality nationality) throws ChanceException {
+    public String firstName(Nationality nationality) {
+        Gender[] values = Gender.values();
+        int genderId = 0;
         try {
-            Gender[] values = Gender.values();
-            int genderId = natural(values.length - 1);
-            return firstName(values[genderId], nationality);
+            genderId = natural(values.length - 1);
         } catch (ChanceException e) {
-            throw e;
+            // it's never throw
         }
+        return firstName(values[genderId], nationality);
     }
 
     /**
      * Generate a random first name.
      *
      * @return A random first name
-     * @throws ChanceException
      */
-    public String firstName() throws ChanceException {
+    public String firstName() {
+        Gender[] genders = Gender.values();
+        Nationality[] nationalities = Nationality.values();
+        int genderId = 0, nacionalityId = 0;
         try {
-            Gender[] genders = Gender.values();
-            int genderId = natural(genders.length - 1);
-            Nationality[] nationalities = Nationality.values();
-            int nacionalityId = natural(nationalities.length - 1);
-            return firstName(genders[genderId], nationalities[nacionalityId]);
+            genderId = natural(genders.length - 1);
+            nacionalityId = natural(nationalities.length - 1);
         } catch (ChanceException e) {
-            throw e;
+            // it's never throw
         }
+        return firstName(genders[genderId], nationalities[nacionalityId]);
+    }
+
+    /**
+     * Generate a random last name, specifying a nationality.
+     *
+     * @param nationality A nationality
+     * @return A random last name
+     */
+    public String lastName(Nationality nationality) {
+        String[] names = LastName.getLastNameList(nationality);
+        int natural = 0;
+        try {
+            natural = natural(names.length - 1);
+        } catch (ChanceException e) {
+            // it's never throw
+        }
+        return names[natural];
+    }
+
+    /**
+     * Generate a random last name.
+     *
+     * @return A random last name
+     */
+    public String lastName() {
+        Nationality[] values = Nationality.values();
+        int nacionalityId = 0;
+        try {
+            nacionalityId = natural(values.length - 1);
+        } catch (ChanceException e) {
+            // it's never throw
+        }
+        return lastName(values[nacionalityId]);
     }
 }

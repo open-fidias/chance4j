@@ -20,57 +20,30 @@
  * You should have received a copy of the GNU General Public License along with
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package br.com.fidias.chance4j.text;
+package br.com.fidias.chance4j.person;
+
+import br.com.fidias.chance4j.AbstractChanceTesting;
+import br.com.fidias.chance4j.ChanceException;
+import br.com.fidias.chance4j.person.name.Nationality;
+import static org.junit.Assert.assertTrue;
+import org.junit.Test;
 
 /**
  *
  * @author atila
  */
-public class TextOptions {
+public class LastNameTest extends AbstractChanceTesting {
 
-    public enum Casing {
-        lower, upper, both
-    }
-    
-    public enum PoolType {
-        custom, alpha, alphanumeric, symbols, any
-    }
-    
-    private Casing casing;
-    private PoolType poolType;
-    private String pool;
-    
-    /**
-     * Create TextOptions with the default values:
-     * casing - both (lower and upper)
-     * poolType - alphanumeric
-     */
-    public TextOptions() {
-        this.casing = Casing.both;
-        this.poolType = PoolType.alphanumeric;
-    }
-
-    public Casing getCasing() {
-        return casing;
-    }
-
-    public void setCasing(Casing casing) {
-        this.casing = casing;
-    }
-
-    public PoolType getPoolType() {
-        return poolType;
-    }
-
-    public void setPoolType(PoolType poolType) {
-        this.poolType = poolType;
-    }
-
-    public String getPool() {
-        return pool;
-    }
-
-    public void setPool(String pool) {
-        this.pool = pool;
+    @Test
+    public void randomLastName() throws ChanceException {
+        Nationality[] nationalities = Nationality.values();
+        int nationalityId;
+        Nationality nationality;
+        for (int i = 0; i < 1000; i++) {
+            nationalityId = chance.natural(nationalities.length - 1);
+            nationality = nationalities[nationalityId];
+            assertTrue("random last name",
+                    chance.lastName(nationality) instanceof String);
+        }
     }
 }
