@@ -20,57 +20,23 @@
  * You should have received a copy of the GNU General Public License along with
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package br.com.fidias.chance4j.text;
+package br.com.fidias.chance4j.person;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  *
  * @author atila
  */
-public class TextOptions {
-
-    public enum Casing {
-        lower, upper, both
-    }
+public class Ssn {
     
-    public enum PoolType {
-        custom, alpha, alphanumeric, symbols, any, numeric
-    }
-    
-    private Casing casing;
-    private PoolType poolType;
-    private String pool;
-    
-    /**
-     * Create TextOptions with the default values:
-     * casing - both (lower and upper)
-     * poolType - alphanumeric
-     */
-    public TextOptions() {
-        this.casing = Casing.both;
-        this.poolType = PoolType.alphanumeric;
-    }
-
-    public Casing getCasing() {
-        return casing;
-    }
-
-    public void setCasing(Casing casing) {
-        this.casing = casing;
-    }
-
-    public PoolType getPoolType() {
-        return poolType;
-    }
-
-    public void setPoolType(PoolType poolType) {
-        this.poolType = poolType;
-    }
-
-    public String getPool() {
-        return pool;
-    }
-
-    public void setPool(String pool) {
-        this.pool = pool;
+    public static String format(String ssn) {
+        Pattern pattern = Pattern.compile("(\\d{3})(\\d{2})(\\d{4})");
+        Matcher matcher = pattern.matcher(ssn);
+        if (matcher.matches()) {
+            ssn = matcher.replaceAll("$1-$2-$3");
+        }
+        return ssn;
     }
 }

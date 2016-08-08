@@ -23,18 +23,18 @@
 package br.com.fidias.chance4j.person;
 
 import br.com.fidias.chance4j.AbstractChanceTesting;
-import br.com.fidias.chance4j.ChanceException;
 import org.junit.Test;
 import static org.junit.Assert.assertTrue;
 
 /**
  * Implementation based on <https://github.com/danielfariati/cpf-cnpj-validator>
+ *
  * @author atila
  */
 public class CpfTest extends AbstractChanceTesting {
-    
+
     private String cpf;
-    
+
     @Test
     public void randomValidCpf() {
         for (int i = 0; i < 1000; i++) {
@@ -42,7 +42,7 @@ public class CpfTest extends AbstractChanceTesting {
             assertTrue("random valid cpf", isValid(cpf));
         }
     }
-    
+
     @Test
     public void randomValidMaskedCpf() {
         for (int i = 0; i < 1000; i++) {
@@ -50,7 +50,7 @@ public class CpfTest extends AbstractChanceTesting {
             assertTrue("random valid cpf", isMasked(cpf));
         }
     }
-    
+
     private static boolean isValid(String cpf) {
         int i;
         int j;
@@ -81,7 +81,7 @@ public class CpfTest extends AbstractChanceTesting {
 
         return dv1 == foundDv[0] && dv2 == foundDv[1];
     }
-    
+
     private boolean isMasked(String cpf) {
         return cpf.matches("\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}");
     }

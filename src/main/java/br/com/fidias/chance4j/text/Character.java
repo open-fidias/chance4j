@@ -59,6 +59,9 @@ public class Character implements Text {
             case alphanumeric:
                 this.options.setPool(this.letters + Number.NUMBERS);
                 break;
+            case numeric:
+                this.options.setPool(Number.NUMBERS);
+                break;
             case any:
                 this.options.setPool(this.letters + Number.NUMBERS + SYMBOLS);
                 break;

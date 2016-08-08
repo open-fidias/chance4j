@@ -20,57 +20,42 @@
  * You should have received a copy of the GNU General Public License along with
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package br.com.fidias.chance4j.text;
+package br.com.fidias.chance4j.person;
 
 /**
  *
  * @author atila
  */
-public class TextOptions {
-
-    public enum Casing {
-        lower, upper, both
+public class SsnOptions {
+    
+    public enum Length {
+        four, nine
     }
     
-    public enum PoolType {
-        custom, alpha, alphanumeric, symbols, any, numeric
-    }
-    
-    private Casing casing;
-    private PoolType poolType;
-    private String pool;
+    private Length length;
+    private boolean dashes;
     
     /**
-     * Create TextOptions with the default values:
-     * casing - both (lower and upper)
-     * poolType - alphanumeric
+     * Initialize SSN Options with length 9 with dashes.
      */
-    public TextOptions() {
-        this.casing = Casing.both;
-        this.poolType = PoolType.alphanumeric;
+    public SsnOptions() {
+        this.length = Length.nine;
+        this.dashes = true;
     }
 
-    public Casing getCasing() {
-        return casing;
+    public Length getLength() {
+        return length;
     }
 
-    public void setCasing(Casing casing) {
-        this.casing = casing;
+    public void setLength(Length length) {
+        this.length = length;
     }
 
-    public PoolType getPoolType() {
-        return poolType;
+    public boolean isDashes() {
+        return dashes;
     }
 
-    public void setPoolType(PoolType poolType) {
-        this.poolType = poolType;
-    }
-
-    public String getPool() {
-        return pool;
-    }
-
-    public void setPool(String pool) {
-        this.pool = pool;
+    public void setDashes(boolean dashes) {
+        this.dashes = dashes;
     }
 }
