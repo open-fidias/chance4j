@@ -22,9 +22,9 @@
  */
 package br.com.fidias.chance4j.person;
 
-import br.com.fidias.chance4j.person.name.br.BrazilianFirstName;
-import br.com.fidias.chance4j.person.name.en.EnglishFirstName;
-import br.com.fidias.chance4j.person.name.it.ItalianFirstName;
+import br.com.fidias.chance4j.person.name.br.BrazilianLastName;
+import br.com.fidias.chance4j.person.name.en.EnglishLastName;
+import br.com.fidias.chance4j.person.name.it.ItalianLastName;
 import br.com.fidias.chance4j.person.name.Nationality;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -33,28 +33,25 @@ import java.util.logging.Logger;
  *
  * @author atila
  */
-public class FirstName {
+public class LastName {
     
-    public static String[] getFirstNameList(Gender gender, Nationality nationality) {
-        if (gender == null) {
-            gender = Gender.Male;
-        }
+    public static String[] getLastNameList(Nationality nationality) {
         if (nationality == null) {
             nationality = Nationality.English;
         }
         switch (nationality) {
             case Brazilian:
-                return BrazilianFirstName.getNames(gender);
+                return BrazilianLastName.NAMES;
             case English:
-                return EnglishFirstName.getNames(gender);
+                return EnglishLastName.NAMES;
             case Italian:
-                return ItalianFirstName.getNames(gender);
+                return ItalianLastName.NAMES;
             default:
                 // fallback to English
                 String message = String.format(
-                        "First Name for '%s' not found. Using English instead.", nationality.name());
-                Logger.getLogger(FirstName.class.getName()).log(Level.WARNING, message);
-                return EnglishFirstName.getNames(gender);
+                        "Last Name for '%s' not found. Using English instead.", nationality.name());
+                Logger.getLogger(LastName.class.getName()).log(Level.WARNING, message);
+                return EnglishLastName.NAMES;
         }
     }
 }

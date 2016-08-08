@@ -33,26 +33,21 @@ import org.junit.Test;
  * @author atila
  */
 public class FirstNameTest extends AbstractChanceTesting {
-    
+
     @Test
     public void randomFirstName() throws ChanceException {
         Gender[] genders = Gender.values();
         Nationality[] nationalities = Nationality.values();
-        int genderId, nationalityId = 0;
+        int genderId, nationalityId;
         Gender gender;
         Nationality nationality;
         for (int i = 0; i < 1000; i++) {
-            try {
-                genderId = chance.natural(genders.length - 1);
-                gender = genders[genderId];
-                nationalityId = chance.natural(nationalities.length - 1);
-                nationality = nationalities[nationalityId];
-                assertTrue("random first name",
-                        chance.firstName(gender, nationality) instanceof String);
-            } catch (Exception e) {
-                assertTrue(String.format("First name for '%s' not supported yet.",
-                        nationalities[nationalityId].name()), e instanceof ChanceException);
-            }
+            genderId = chance.natural(genders.length - 1);
+            gender = genders[genderId];
+            nationalityId = chance.natural(nationalities.length - 1);
+            nationality = nationalities[nationalityId];
+            assertTrue("random first name",
+                    chance.firstName(gender, nationality) instanceof String);
         }
     }
 }
