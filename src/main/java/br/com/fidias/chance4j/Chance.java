@@ -29,7 +29,9 @@ import br.com.fidias.chance4j.person.CpfOptions;
 import br.com.fidias.chance4j.person.FirstName;
 import br.com.fidias.chance4j.person.Gender;
 import br.com.fidias.chance4j.person.LastName;
+import br.com.fidias.chance4j.person.NamePrefix;
 import br.com.fidias.chance4j.person.name.Nationality;
+import br.com.fidias.chance4j.person.name.PrefixSuffixOptions;
 import br.com.fidias.chance4j.text.TextOptions;
 import br.com.fidias.chance4j.text.Character;
 import java.math.BigDecimal;
@@ -684,5 +686,56 @@ public class Chance {
             // it's never throw
         }
         return lastName(values[nacionalityId]);
+    }
+
+    /**
+     * Generate a random name prefix, specifying a gender.
+     *
+     * @param gender Either Male or Female
+     * @param options Either full or abbreviated
+     * @return A random name prefix
+     */
+    public String namePrefix(Gender gender, PrefixSuffixOptions options) {
+        String[] list = NamePrefix.getNamePrefixList(gender, options);
+        int natural = 0;
+        try {
+            natural = natural(list.length - 1);
+        } catch (ChanceException e) {
+            // it's never throw
+        }
+        return list[natural];
+    }
+
+    /**
+     * Generate a random name prefix.
+     *
+     * @param options Either full or abbreviated
+     * @return A random name prefix
+     */
+    public String namePrefix(PrefixSuffixOptions options) {
+        Gender[] genders = Gender.values();
+        int genderId = 0;
+        try {
+            genderId = natural(genders.length - 1);
+        } catch (ChanceException e) {
+            // it's never throw
+        }
+        return namePrefix(genders[genderId], options);
+    }
+
+    /**
+     * Generate a random name prefix.
+     *
+     * @return A random name prefix
+     */
+    public String namePrefix() {
+        int optionsId = 0;
+        PrefixSuffixOptions[] values = PrefixSuffixOptions.values();
+        try {
+            optionsId = natural(values.length - 1);
+        } catch (ChanceException e) {
+            // it's never throw
+        }
+        return namePrefix(values[optionsId]);
     }
 }
