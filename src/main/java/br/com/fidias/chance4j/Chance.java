@@ -22,6 +22,7 @@
  */
 package br.com.fidias.chance4j;
 
+import br.com.fidias.chance4j.person.AgeOptions;
 import br.com.fidias.chance4j.person.Cnpj;
 import br.com.fidias.chance4j.person.CnpjOptions;
 import br.com.fidias.chance4j.person.Cpf;
@@ -861,5 +862,49 @@ public class Chance {
         options.setLength(SsnOptions.Length.nine);
         options.setDashes(true);
         return ssn(options);
+    }
+
+    /**
+     * Return a random AgeOptions
+     *
+     * @return a random AgeOptions
+     */
+    public AgeOptions ageOptions() {
+        AgeOptions[] values = AgeOptions.values();
+        int natural = 0;
+        try {
+            natural = natural(values.length - 1);
+        } catch (ChanceException e) {
+            // it's never throw
+        }
+        return values[natural];
+    }
+
+    /**
+     * Generate a random age, based on AgeOptions.
+     *
+     * @param options Age options
+     * @return A random age
+     */
+    public int age(AgeOptions options) {
+        if (options == null) {
+            options = AgeOptions.any;
+        }
+        int natural = 0;
+        try {
+            natural = natural(options.getMin(), options.getMax());
+        } catch (ChanceException e) {
+            // it's never throw
+        }
+        return natural;
+    }
+
+    /**
+     * Generate a random age.
+     *
+     * @return A random age
+     */
+    public int age() {
+        return age(AgeOptions.any);
     }
 }
