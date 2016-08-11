@@ -38,6 +38,7 @@ import br.com.fidias.chance4j.person.name.Nationality;
 import br.com.fidias.chance4j.person.name.PrefixSuffixOptions;
 import br.com.fidias.chance4j.text.TextOptions;
 import br.com.fidias.chance4j.text.Character;
+import br.com.fidias.chance4j.time.Second;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
@@ -906,5 +907,20 @@ public class Chance {
      */
     public int age() {
         return age(AgeOptions.any);
+    }
+
+    /**
+     * Generate a random second.
+     *
+     * @return A random second
+     */
+    public int second() {
+        int natural = 0;
+        try {
+            natural = natural(Second.MIN, Second.MAX);
+        } catch (ChanceException e) {
+            // it's never throw
+        }
+        return natural;
     }
 }
