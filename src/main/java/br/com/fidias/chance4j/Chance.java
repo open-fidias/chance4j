@@ -38,6 +38,7 @@ import br.com.fidias.chance4j.person.name.Nationality;
 import br.com.fidias.chance4j.person.name.PrefixSuffixOptions;
 import br.com.fidias.chance4j.text.TextOptions;
 import br.com.fidias.chance4j.text.Character;
+import br.com.fidias.chance4j.time.Millisecond;
 import br.com.fidias.chance4j.time.Second;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -113,9 +114,6 @@ public class Chance {
     }
 
     public int natural(int max) throws ChanceException {
-        if (max <= 0) {
-            throw new ChanceException("Max must be greater than zero.");
-        }
         return natural(0, max);
     }
 
@@ -917,7 +915,22 @@ public class Chance {
     public int second() {
         int natural = 0;
         try {
-            natural = natural(Second.MIN, Second.MAX);
+            natural = natural(Second.MAX);
+        } catch (ChanceException e) {
+            // it's never throw
+        }
+        return natural;
+    }
+
+    /**
+     * Generate a random millisecond.
+     *
+     * @return A random millisecond
+     */
+    public int millisecond() {
+        int natural = 0;
+        try {
+            natural = natural(Millisecond.MAX);
         } catch (ChanceException e) {
             // it's never throw
         }
