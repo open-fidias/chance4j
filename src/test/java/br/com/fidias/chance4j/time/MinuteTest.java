@@ -22,12 +22,23 @@
  */
 package br.com.fidias.chance4j.time;
 
+import br.com.fidias.chance4j.AbstractChanceTesting;
+import static org.junit.Assert.assertTrue;
+import org.junit.Test;
+
 /**
  *
  * @author atila
  */
-public interface Millisecond {
-
-    public final static int MIN = 0;
-    public final static int MAX = 999;
+public class MinuteTest extends AbstractChanceTesting {
+    
+    private int minute;
+    
+    @Test
+    public void randomMinute() {
+        for (int i = 0; i < 1000; i++) {
+            minute = chance.minute();
+            assertTrue("random minute", minute >= Minute.MIN && minute <= Minute.MAX);
+        }
+    }
 }

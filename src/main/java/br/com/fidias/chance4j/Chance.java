@@ -39,6 +39,7 @@ import br.com.fidias.chance4j.person.name.PrefixSuffixOptions;
 import br.com.fidias.chance4j.text.TextOptions;
 import br.com.fidias.chance4j.text.Character;
 import br.com.fidias.chance4j.time.Millisecond;
+import br.com.fidias.chance4j.time.Minute;
 import br.com.fidias.chance4j.time.Second;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -908,18 +909,28 @@ public class Chance {
     }
 
     /**
+     * Generate a random natural, used only internally with safe max.
+     *
+     * @param max Max value to choose from
+     * @return
+     */
+    private int secureNatural(int max) {
+        int natural = 0;
+        try {
+            natural = natural(max);
+        } catch (ChanceException e) {
+            // it's never throw
+        }
+        return natural;
+    }
+
+    /**
      * Generate a random second.
      *
      * @return A random second
      */
     public int second() {
-        int natural = 0;
-        try {
-            natural = natural(Second.MAX);
-        } catch (ChanceException e) {
-            // it's never throw
-        }
-        return natural;
+        return secureNatural(Second.MAX);
     }
 
     /**
@@ -928,12 +939,15 @@ public class Chance {
      * @return A random millisecond
      */
     public int millisecond() {
-        int natural = 0;
-        try {
-            natural = natural(Millisecond.MAX);
-        } catch (ChanceException e) {
-            // it's never throw
-        }
-        return natural;
+        return secureNatural(Millisecond.MAX);
+    }
+
+    /**
+     * Generate a random minute.
+     *
+     * @return A random minute
+     */
+    public int minute() {
+        return secureNatural(Minute.MAX);
     }
 }

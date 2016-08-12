@@ -26,8 +26,8 @@ package br.com.fidias.chance4j.time;
  *
  * @author atila
  */
-public interface Millisecond {
+public interface Minute {
 
-    public final static int MIN = 0;
-    public final static int MAX = 999;
+    public static final int MIN = 0;
+    public static final int MAX = 59;
 }
