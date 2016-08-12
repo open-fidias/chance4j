@@ -38,6 +38,7 @@ import br.com.fidias.chance4j.person.name.Nationality;
 import br.com.fidias.chance4j.person.name.PrefixSuffixOptions;
 import br.com.fidias.chance4j.text.TextOptions;
 import br.com.fidias.chance4j.text.Character;
+import br.com.fidias.chance4j.time.Hour;
 import br.com.fidias.chance4j.time.Millisecond;
 import br.com.fidias.chance4j.time.Minute;
 import br.com.fidias.chance4j.time.Second;
@@ -915,9 +916,13 @@ public class Chance {
      * @return
      */
     private int secureNatural(int max) {
+        return secureNatural(0, max);
+    }
+
+    private int secureNatural(int min, int max) {
         int natural = 0;
         try {
-            natural = natural(max);
+            natural = natural(min, max);
         } catch (ChanceException e) {
             // it's never throw
         }
@@ -949,5 +954,27 @@ public class Chance {
      */
     public int minute() {
         return secureNatural(Minute.MAX);
+    }
+
+    /**
+     * Generate a random hour.
+     *
+     * @param hour 24 or 12 style
+     * @return A random hour
+     */
+    public int hour(Hour hour) {
+        if (hour == null) {
+            hour = Hour.twenty_four;
+        }
+        return secureNatural(hour.getMin(), hour.getMax());
+    }
+
+    /**
+     * Generate a random hour, with 24 style.
+     *
+     * @return A random hour
+     */
+    public int hour() {
+        return hour(Hour.twenty_four);
     }
 }
