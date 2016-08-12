@@ -27,7 +27,7 @@ package br.com.fidias.chance4j.time;
  * @author atila
  */
 public interface Second {
-    
+
     public static final int MIN = 0;
     public static final int MAX = 59;
 }
