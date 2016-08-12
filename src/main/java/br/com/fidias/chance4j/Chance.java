@@ -41,10 +41,12 @@ import br.com.fidias.chance4j.text.Character;
 import br.com.fidias.chance4j.time.Hour;
 import br.com.fidias.chance4j.time.Millisecond;
 import br.com.fidias.chance4j.time.Minute;
+import br.com.fidias.chance4j.time.Month;
 import br.com.fidias.chance4j.time.Second;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
+import java.util.Locale;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.math3.random.MersenneTwister;
 import org.apache.commons.math3.random.RandomDataGenerator;
@@ -976,5 +978,66 @@ public class Chance {
      */
     public int hour() {
         return hour(Hour.twenty_four);
+    }
+
+    /**
+     * Generate a random month.
+     * <pre>
+     * chance.month();
+     * => 5
+     * </pre>
+     *
+     * @return A random month
+     */
+    public int month() {
+        return secureNatural(Month.MIN, Month.MAX);
+    }
+
+    /**
+     * Generate a random month as text, using default Locale.
+     * <pre>
+     * chance.month(Month.MonthOptions.numeric);
+     * => 05
+     * chance.month(Month.MonthOptions.shortName);
+     * => Oct
+     * chance.month(Month.MonthOptions.fullName);
+     * => October
+     * </pre>
+     *
+     * @param options Can be numeric short or full
+     * @return A random month
+     */
+    public String monthAsText(Month.MonthOptions options) {
+        return monthAsText(options, Locale.getDefault());
+    }
+
+    /**
+     * Generate a random month as text.
+     * <pre>
+     * chance.month(Month.MonthOptions.fullName, new Locale("pt", "BR"));
+     * => Outubro
+     * </pre>
+     *
+     * @param options Can be numeric short or full
+     * @param locale Custom locale
+     * @return A random month
+     */
+    public String monthAsText(Month.MonthOptions options, Locale locale) {
+        int month = month();
+        return Month.monthName(month, options, locale);
+    }
+
+    /**
+     * Generate a random month as text, using full name option.
+     * <pre>
+     * chance.month(new Locale("pt", "BR"));
+     * => Outubro
+     * </pre>
+     *
+     * @param locale
+     * @return A random month
+     */
+    public String monthAsText(Locale locale) {
+        return monthAsText(Month.MonthOptions.fullName, locale);
     }
 }
