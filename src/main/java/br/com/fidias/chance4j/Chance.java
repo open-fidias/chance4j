@@ -52,6 +52,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.math3.random.MersenneTwister;
 import org.apache.commons.math3.random.RandomDataGenerator;
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeConstants;
 import org.joda.time.MonthDay;
 import org.joda.time.format.DateTimeFormatter;
 
@@ -1179,8 +1180,16 @@ public class Chance {
      */
     private DateTime dateTime(int year) throws ChanceException {
         int month = month();
-        MonthDay monthDay = new MonthDay(month, 1);
-        int day = natural(1, monthDay.dayOfMonth().getMaximumValue());
+        // https://github.com/JodaOrg/joda-time/issues/22
+        int maximumValue;
+        if (month == DateTimeConstants.FEBRUARY) {
+            maximumValue = 28;
+        } else {
+            MonthDay monthDay = new MonthDay(month, 1);
+            maximumValue = monthDay.dayOfMonth().getMaximumValue();
+        }
+        
+        int day = natural(1, maximumValue);
         return new DateTime(year, month, day, hour(Hour.twenty_four), minute());
     }
 
