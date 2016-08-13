@@ -46,11 +46,15 @@ import br.com.fidias.chance4j.time.Second;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
+import java.util.Date;
 import java.util.Locale;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.math3.random.MersenneTwister;
 import org.apache.commons.math3.random.RandomDataGenerator;
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeConstants;
+import org.joda.time.MonthDay;
+import org.joda.time.format.DateTimeFormatter;
 
 /**
  *
@@ -106,6 +110,39 @@ public class Chance {
      */
     public int integer() throws ChanceException {
         return integer(Integer.MIN_VALUE, Integer.MAX_VALUE);
+    }
+
+    /**
+     * Return a random long.
+     * <pre>
+     * chance.getLong(0, 100);
+     * => 42
+     * </pre>
+     *
+     * @param min
+     * @param max
+     * @return
+     * @throws ChanceException
+     */
+    public long getLong(long min, long max) throws ChanceException {
+        if (min > max) {
+            throw new ChanceException("Min cannot be greater than Max.");
+        }
+        return random.nextLong(min, max);
+    }
+
+    /**
+     * Return a random long.
+     * <pre>
+     * chance.getLong();
+     * => 16
+     * </pre>
+     *
+     * @return
+     * @throws ChanceException
+     */
+    public long getLong() throws ChanceException {
+        return getLong(Long.MIN_VALUE, Long.MAX_VALUE);
     }
 
     public int natural() {
@@ -1044,10 +1081,10 @@ public class Chance {
 
     /**
      * Generate a random year.
-     * <code>
+     * <pre>
      * chance.year(1988,  2016);
      * => 1994
-     * </code>
+     * </pre>
      *
      * @param min Minimum value to choose from
      * @param max Maximum value to choose from
@@ -1059,11 +1096,11 @@ public class Chance {
     }
 
     /**
-     * Generate a random year, within the current year and 100 years from now..
-     * <code>
+     * Generate a random year, within the current year and 100 years from now.
+     * <pre>
      * chance.year();
      * => 2026
-     * </code>
+     * </pre>
      *
      * @return A random year
      * @throws ChanceException
@@ -1071,5 +1108,177 @@ public class Chance {
     public int year() throws ChanceException {
         int currentYear = DateTime.now().getYear();
         return year(currentYear, currentYear + 100);
+    }
+
+    /**
+     * Generate a random datetime, between min and max.
+     *
+     * @param min Minimum value to choose from
+     * @param max Maximum value to choose from
+     * @return A random datetime
+     * @throws ChanceException
+     */
+    private DateTime dateTime(long min, long max) throws ChanceException {
+        if (min < 1) {
+            throw new ChanceException("Min value must be greater than zero.");
+        }
+        long value = getLong(min, max);
+        return new DateTime(value);
+    }
+
+    /**
+     * Generate a random date, between min and max.
+     *
+     * @param min Minimum value to choose from
+     * @param max Maximum value to choose from
+     * @return A random date
+     * @throws ChanceException
+     */
+    private Date date(long min, long max) throws ChanceException {
+        return dateTime(min, max).toDate();
+    }
+
+    /**
+     * Generate a random date, between min and max.
+     * <pre>
+     * chance.date(date1, date2);
+     * => Fri Mar 18 00:09:00 BRT 1994
+     * </pre>
+     *
+     * @param min Minimum value to choose from
+     * @param max Maximum value to choose from
+     * @return A random date
+     * @throws ChanceException
+     */
+    public Date date(Date min, Date max) throws ChanceException {
+        if (min == null || max == null) {
+            throw new ChanceException("Min/max cannot be null.");
+        }
+        return date(min.getTime(), max.getTime());
+    }
+
+    /**
+     * Generate a random date, between min and max.
+     * <pre>
+     * chance.date();
+     * => Fri Mar 18 00:09:00 BRT 1994
+     * </pre>
+     *
+     * @return A random date
+     * @throws ChanceException
+     */
+    public Date date() throws ChanceException {
+        return date(1, DateTime.now().getMillis() * 10);
+    }
+
+    /**
+     * Generate a random datetime, limited to a year.
+     *
+     * @param year Year of the date
+     * @return A random date
+     * @throws ChanceException
+     */
+    private DateTime dateTime(int year) throws ChanceException {
+        int month = month();
+        // https://github.com/JodaOrg/joda-time/issues/22
+        int maximumValue;
+        if (month == DateTimeConstants.FEBRUARY) {
+            maximumValue = 28;
+        } else {
+            MonthDay monthDay = new MonthDay(month, 1);
+            maximumValue = monthDay.dayOfMonth().getMaximumValue();
+        }
+        
+        int day = natural(1, maximumValue);
+        return new DateTime(year, month, day, hour(Hour.twenty_four), minute());
+    }
+
+    /**
+     * Generate a random date, limited to a year.
+     * <pre>
+     * chance.date(1994);
+     * => Fri Mar 18 00:09:00 BRT 1994
+     * </pre>
+     *
+     * @param year Year of the date
+     * @return A random date
+     * @throws ChanceException
+     */
+    public Date date(int year) throws ChanceException {
+        return dateTime(year).toDate();
+    }
+
+    /**
+     * Generate a random date as text, between min and max.
+     * <pre>
+     * chance.date(date1, date2, "dd/MM/yyyy", new Locale("pt", "BR"));
+     * => 17/07/1977
+     * </pre>
+     *
+     * @param min Minimum value to choose from
+     * @param max Maximum value to choose from
+     * @param pattern Style of the date
+     * @param locale Custom locale
+     * @return A random date
+     * @throws ChanceException
+     */
+    public String dateAsText(Date min, Date max, String pattern, Locale locale)
+            throws ChanceException {
+        DateTime dateTime = dateTime(min.getTime(), max.getTime());
+        return dateTime.toString(pattern, locale);
+    }
+
+    /**
+     * Generate a random date as text, between min and max using default Locale.
+     * <pre>
+     * chance.date(date1, date2, "dd/MM/yyyy");
+     * => 17/07/1977
+     * </pre>
+     *
+     * @param min Minimum value to choose from
+     * @param max Maximum value to choose from
+     * @param pattern Style of the date
+     * @return A random date
+     * @throws ChanceException
+     */
+    public String dateAsText(Date min, Date max, String pattern)
+            throws ChanceException {
+        return dateAsText(min, max, pattern, Locale.getDefault());
+    }
+
+    /**
+     * Generate a random date, limited to a year.
+     * <pre>
+     * chance.date(1994, "dd/MM/yyyy", new Locale("pt", "BR"));
+     * => 19/10/1994
+     * </pre>
+     *
+     * @param year Year of the date
+     * @param pattern Style of the date
+     * @param locale Custom locale
+     * @return A random date
+     * @throws ChanceException
+     */
+    public String dateAsText(int year, String pattern, Locale locale)
+            throws ChanceException {
+        DateTime dateTime = dateTime(year);
+        return dateTime.toString(pattern, locale);
+    }
+
+    /**
+     * Generate a random date, limited to a year using default Locale.
+     * <pre>
+     * chance.date(1994, "dd/MM/yyyy");
+     * => 19/10/1994
+     * </pre>
+     *
+     * @param year Year of the date
+     * @param pattern Style of the date
+     * @return A random date
+     * @throws ChanceException
+     */
+    public String dateAsText(int year, String pattern)
+            throws ChanceException {
+        return dateAsText(year, pattern, Locale.getDefault());
     }
 }

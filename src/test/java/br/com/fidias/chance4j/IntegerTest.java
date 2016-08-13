@@ -75,7 +75,6 @@ public class IntegerTest extends AbstractChanceTesting {
         }
         assertTrue("is sometimes negative, sometimes positive",
                 positiveCount >= 200 && positiveCount <= 800);
-        
     }
     
     @Test
