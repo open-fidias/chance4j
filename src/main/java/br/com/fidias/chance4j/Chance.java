@@ -1142,7 +1142,7 @@ public class Chance {
      * Generate a random date, between min and max.
      * <pre>
      * chance.date(date1, date2);
-     * => Fri Mar 18 00:09:00 BRT 1994
+     * => Fri Mar 18 00:00:00 BRT 1994
      * </pre>
      *
      * @param min Minimum value to choose from
@@ -1161,14 +1161,40 @@ public class Chance {
      * Generate a random date, between min and max.
      * <pre>
      * chance.date();
-     * => Fri Mar 18 00:09:00 BRT 1994
+     * => Thu Aug 01 13:11:48 BRT 2318
      * </pre>
      *
      * @return A random date
      * @throws ChanceException
+     * @see #timestamp()
      */
     public Date date() throws ChanceException {
         return date(1, DateTime.now().getMillis() * 10);
+    }
+
+    /**
+     * Generate a random datetime, limited to a year.
+     *
+     * @param year Year of the date
+     * @param hour Hour of the date
+     * @param minute Minute of the date
+     * @return A random date with time
+     * @throws ChanceException
+     */
+    private DateTime dateTime(int year, int hour, int minute, int second)
+            throws ChanceException {
+        int month = month();
+        // https://github.com/JodaOrg/joda-time/issues/22
+        int maximumValue;
+        if (month == DateTimeConstants.FEBRUARY) {
+            maximumValue = 28;
+        } else {
+            MonthDay monthDay = new MonthDay(month, 1);
+            maximumValue = monthDay.dayOfMonth().getMaximumValue();
+        }
+
+        int day = natural(1, maximumValue);
+        return new DateTime(year, month, day, hour, minute, second);
     }
 
     /**
@@ -1179,25 +1205,14 @@ public class Chance {
      * @throws ChanceException
      */
     private DateTime dateTime(int year) throws ChanceException {
-        int month = month();
-        // https://github.com/JodaOrg/joda-time/issues/22
-        int maximumValue;
-        if (month == DateTimeConstants.FEBRUARY) {
-            maximumValue = 28;
-        } else {
-            MonthDay monthDay = new MonthDay(month, 1);
-            maximumValue = monthDay.dayOfMonth().getMaximumValue();
-        }
-        
-        int day = natural(1, maximumValue);
-        return new DateTime(year, month, day, hour(Hour.twenty_four), minute());
+        return dateTime(year, 0, 0, 0);
     }
 
     /**
      * Generate a random date, limited to a year.
      * <pre>
      * chance.date(1994);
-     * => Fri Mar 18 00:09:00 BRT 1994
+     * => Fri Mar 18 00:00:00 BRT 1994
      * </pre>
      *
      * @param year Year of the date
@@ -1280,5 +1295,82 @@ public class Chance {
     public String dateAsText(int year, String pattern)
             throws ChanceException {
         return dateAsText(year, pattern, Locale.getDefault());
+    }
+
+    /**
+     * Generate a random date with random time.
+     *
+     * @param year Year of the timestamp
+     * @return A random date with time
+     * @throws ChanceException
+     */
+    private DateTime dateTimeTimestamp(int year) throws ChanceException {
+        return dateTime(year, hour(), minute(), second());
+    }
+
+    /**
+     * Generate a random date with random time.
+     * <pre>
+     * chance.timestamp(1994);
+     * => Mon Jul 11 21:25:06 BRT 1994
+     * </pre>
+     *
+     * @param year Year of the timestamp
+     * @return A random date with time
+     * @throws ChanceException
+     */
+    public Date timestamp(int year) throws ChanceException {
+        return dateTimeTimestamp(year).toDate();
+    }
+
+    /**
+     * Generate a random date with random hour and minute.
+     * <pre>
+     * chance.timestamp(1994);
+     * => Mon Jul 11 21:25:15 BRT 1994
+     * </pre>
+     *
+     * @return A random date with time
+     * @throws ChanceException
+     * @see #date()
+     */
+    public Date timestamp() throws ChanceException {
+        return timestamp(year());
+    }
+
+    /**
+     * Generate a random date with random hour and minute.
+     * <pre>
+     * chance.timestamp(1994, "dd/MM/yyyy hh:mm:ss", new Locale("pt", "BR"));
+     * => 06/11/1994 10:27:26
+     * </pre>
+     *
+     * @param year Year of the timestamp
+     * @param pattern Style of the date
+     * @param locale Custom locale
+     * @return A random date with time
+     * @throws ChanceException
+     */
+    public String timestampAsText(int year, String pattern, Locale locale)
+            throws ChanceException {
+        DateTime timestamp = dateTimeTimestamp(year);
+        return timestamp.toString(pattern, locale);
+    }
+
+    /**
+     * Generate a random date with random hour and minute.
+     * <pre>
+     * chance.timestamp(1994, "dd/MM/yyyy hh:mm:ss");
+     * => 06/11/1994 10:27:26
+     * </pre>
+     *
+     * @param year Year of the timestamp
+     * @param pattern Style of the date
+     * @return A random date with time
+     * @throws ChanceException
+     */
+    public String timestampAsText(int year, String pattern)
+            throws ChanceException {
+        return timestampAsText(year, pattern, Locale.getDefault());
     }
 }
