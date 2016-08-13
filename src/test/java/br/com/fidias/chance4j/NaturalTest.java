@@ -73,7 +73,7 @@ public class NaturalTest extends AbstractChanceTesting {
                 positiveCount++;
             }
         }
-        assertTrue("is sometimes negative, sometimes positive",
+        assertTrue("always positive",
                 positiveCount == 1000);
     }
     
