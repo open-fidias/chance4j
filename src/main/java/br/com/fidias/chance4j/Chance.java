@@ -50,6 +50,7 @@ import java.util.Locale;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.math3.random.MersenneTwister;
 import org.apache.commons.math3.random.RandomDataGenerator;
+import org.joda.time.DateTime;
 
 /**
  *
@@ -1034,10 +1035,41 @@ public class Chance {
      * => Outubro
      * </pre>
      *
-     * @param locale
+     * @param locale Custom locale
      * @return A random month
      */
     public String monthAsText(Locale locale) {
         return monthAsText(Month.MonthOptions.fullName, locale);
+    }
+
+    /**
+     * Generate a random year.
+     * <code>
+     * chance.year(1988,  2016);
+     * => 1994
+     * </code>
+     *
+     * @param min Minimum value to choose from
+     * @param max Maximum value to choose from
+     * @return A random year
+     * @throws ChanceException
+     */
+    public int year(int min, int max) throws ChanceException {
+        return natural(min, max);
+    }
+
+    /**
+     * Generate a random year, within the current year and 100 years from now..
+     * <code>
+     * chance.year();
+     * => 2026
+     * </code>
+     *
+     * @return A random year
+     * @throws ChanceException
+     */
+    public int year() throws ChanceException {
+        int currentYear = DateTime.now().getYear();
+        return year(currentYear, currentYear + 100);
     }
 }
