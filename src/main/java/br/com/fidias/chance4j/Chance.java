@@ -950,6 +950,100 @@ public class Chance {
     }
 
     /**
+     * Generate a random birthday.
+     *
+     * @param options Age options
+     * @return A random birthday
+     * @throws ChanceException
+     */
+    private DateTime birthdayDateTime(AgeOptions options) throws ChanceException {
+        int age = age(options);
+        int currentYear = DateTime.now().getYear();
+        return dateTimeTimestamp(currentYear - age);
+    }
+
+    /**
+     * Generate a random birthday.
+     * <pre>
+     * chance.birthday(AgeOptions.adult);
+     * => Mon Jul 11 21:25:15 BRT 1980
+     * </pre>
+     *
+     * @param options Age options
+     * @return A random birthday
+     * @throws ChanceException
+     */
+    public Date birthday(AgeOptions options) throws ChanceException {
+        return birthdayDateTime(options).toDate();
+    }
+
+    /**
+     * Generate a random birthday.
+     * <pre>
+     * chance.birthday();
+     * => Mon Jul 11 21:25:15 BRT 1980
+     * </pre>
+     *
+     * @return A random birthday
+     * @throws ChanceException
+     */
+    public Date birthday() throws ChanceException {
+        return birthday(ageOptions());
+    }
+
+    /**
+     * Generate a random birthday.
+     * <pre>
+     * chance.birthdayAsText(AgeOptions.adult, "dd/MM/yyyy hh:mm:ss", new Locale("pt", "BR"));
+     * => 06/11/1987 10:27:26
+     * </pre>
+     *
+     * @param options Age options
+     * @param pattern Style of the date
+     * @param locale Custom locale
+     * @return A random birthday
+     * @throws ChanceException
+     */
+    public String birthdayAsText(AgeOptions options, String pattern, Locale locale)
+            throws ChanceException {
+        DateTime birthday = birthdayDateTime(options);
+        return birthday.toString(pattern, locale);
+    }
+
+    /**
+     * Generate a random birthday.
+     * <pre>
+     * chance.birthdayAsText("dd/MM/yyyy hh:mm:ss", new Locale("pt", "BR"));
+     * => 06/11/1987 10:27:26
+     * </pre>
+     *
+     * @param pattern Style of the date
+     * @param locale Custom locale
+     * @return A random birthday
+     * @throws ChanceException
+     */
+    public String birthdayAsText(String pattern, Locale locale)
+            throws ChanceException {
+        return birthdayAsText(ageOptions(), pattern, locale);
+    }
+
+    /**
+     * Generate a random birthday.
+     * <pre>
+     * chance.birthdayAsText("dd/MM/yyyy hh:mm:ss");
+     * => 06/11/1987 10:27:26
+     * </pre>
+     *
+     * @param pattern Style of the date
+     * @return A random birthday
+     * @throws ChanceException
+     */
+    public String birthdayAsText(String pattern)
+            throws ChanceException {
+        return birthdayAsText(pattern, Locale.getDefault());
+    }
+
+    /**
      * Generate a random natural, used only internally with safe max.
      *
      * @param max Max value to choose from
