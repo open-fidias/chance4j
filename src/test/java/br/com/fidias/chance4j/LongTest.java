@@ -22,31 +22,31 @@
  */
 package br.com.fidias.chance4j;
 
+import static br.com.fidias.chance4j.AbstractChanceTesting.chance;
 import java.util.Arrays;
 import java.util.Collection;
+import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameters;
-import static org.junit.Assert.assertTrue;
 
 /**
  *
  * @author atila
  */
 @RunWith(Parameterized.class)
-public class IntegerTest extends AbstractChanceTesting {
-    
-    private final int min, max;
-    
-    public IntegerTest(int min, int max) {
+public class LongTest extends AbstractChanceTesting {
+
+    private final long min, max;
+
+    public LongTest(long min, long max) {
         this.min = min;
         this.max = max;
     }
-    
-    @Parameters
+
+    @Parameterized.Parameters
     public static Collection<Object[]> data() {
-        return Arrays.asList(new Object[][] {
+        return Arrays.asList(new Object[][]{
             {0, 10},
             {5, 7},
             {10, 100},
@@ -54,38 +54,31 @@ public class IntegerTest extends AbstractChanceTesting {
             {-25, 0},
             {-25045667, 90365489},
             {-250, -110},
-            {1000, Integer.MAX_VALUE},
-            {Integer.MIN_VALUE, 0},
-            {Integer.MIN_VALUE, Integer.MAX_VALUE},
-        });
+            {1000, Long.MAX_VALUE},
+            {Long.MIN_VALUE, 0},
+            {Long.MIN_VALUE, Long.MAX_VALUE},});
     }
-    
+
     @Test(expected = ChanceException.class)
     public void minGreaterThanMax() throws ChanceException {
-        chance.integer(max, min);
+        chance.getLong(max, min);
     }
-    
+
     @Test
     public void positiveCount() throws ChanceException {
-        int positiveCount = 0;
+        long positiveCount = 0;
         for (int i = 0; i < 1000; i++) {
-            if (chance.integer() > 0) {
+            if (chance.getLong() > 0) {
                 positiveCount++;
             }
         }
         assertTrue("is sometimes negative, sometimes positive",
                 positiveCount >= 200 && positiveCount <= 800);
     }
-    
+
     @Test
-    public void aboveMinimum() throws ChanceException {
-        int integer = chance.integer(min, max);
-        assertTrue("is above minimum", integer >= min);
-    }
-    
-    @Test
-    public void belowMaximum() throws ChanceException {
-        int integer = chance.integer(min, max);
-        assertTrue("is below maximum", integer <= max);
+    public void randomLong() throws ChanceException {
+        long value = chance.getLong(min, max);
+        assertTrue("random long", value >= min && value <= max);
     }
 }
