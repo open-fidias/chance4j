@@ -3,6 +3,7 @@
 **Chance4j** - Random generator helper for Java.
 
 [![Build Status](https://travis-ci.org/open-fidias/chance4j.svg?branch=master)](https://travis-ci.org/open-fidias/chance4j)
+[![Javadocs](http://www.javadoc.io/badge/com.github.open-fidias/chance4j.svg)](http://www.javadoc.io/doc/com.github.open-fidias/chance4j)
 
 Homepage: <https://github.com/open-fidias/chance4j>
 
