@@ -44,6 +44,7 @@ import br.com.fidias.chance4j.time.Minute;
 import br.com.fidias.chance4j.time.Month;
 import br.com.fidias.chance4j.time.Second;
 import java.math.BigDecimal;
+import java.math.MathContext;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.Date;
@@ -54,7 +55,6 @@ import org.apache.commons.math3.random.RandomDataGenerator;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeConstants;
 import org.joda.time.MonthDay;
-import org.joda.time.format.DateTimeFormatter;
 
 /**
  *
@@ -62,6 +62,14 @@ import org.joda.time.format.DateTimeFormatter;
  */
 public class Chance {
 
+    public final static int DECIMAL_SIZE_DEFAULT_VALUE = 2;
+    /**
+     * Force increase the localFixed value in
+     * {@link Chance#getBigDecimal(java.lang.Integer, java.lang.Integer, int)}
+     * to obtain a smaller number to maxLocal.
+     * Otherwise the double value will overflow and give wrong number of decimals.
+     */
+    public final static int FORCE_INCREASE_FIXED = 2;
     public final static int MIN_SENTENCES_FOR_PARAGRAPH = 3;
     public final static int MAX_SENTENCES_FOR_PARAGRAPH = 7;
     public final static int MIN_WORDS_FOR_SENTENCE = 12;
@@ -211,59 +219,254 @@ public class Chance {
         return result;
     }
 
-    private float floating(Float min, Float max, int fixed) {
-        throw new UnsupportedOperationException();
-    }
-
     /**
-     * Return a random floating point number.
+     * Return a random BigDecimal number.
+     * <pre>
+     * chance.getBigDecimal(-10, 100, 2);
+     * => 45.89
+     * </pre>
      *
      * @param min Minimum value to choose from
      * @param max Maximum value to choose from
      * @param fixed Specify a fixed precision
-     * @return A single floating point number
-     * @throws ChanceException Min cannot be greater than Max.
-     */
-    public float floating(int min, int max, int fixed) throws ChanceException {
-        int num;
-        int localFixed = (int) Math.pow(10, fixed);
-        int localMax;
-        if (max <= -1) {
-            localMax = (int) (Integer.MAX_VALUE / localFixed);
-        } else {
-            localMax = max;
-        }
-        int localMin;
-        if (min <= -1) {
-            localMin = -localMax;
-        } else {
-            localMin = min;
-        }
-        num = integer(localMin * localFixed, localMax * localFixed);
-        float f = num * 1.0f / localFixed * 1.0f;
-        BigDecimal result = new BigDecimal(f).setScale(fixed, RoundingMode.HALF_UP);
-        return result.floatValue();
-    }
-
-    /**
-     * Return a random floating point number.
-     *
-     * @return A single floating point number
+     * @return A random BigDecimal
      * @throws ChanceException
      */
-    public float floating() throws ChanceException {
-        return floating(-1, -1, 4);
+    public BigDecimal getBigDecimal(Integer min, Integer max, int fixed) throws ChanceException {
+        if (min != null && max != null && max < min) {
+            throw new ChanceException("Max must be greater than min.");
+        }
+
+        int num;
+        int localFixed = (int) Math.pow(10, fixed + FORCE_INCREASE_FIXED);
+        int localMax = (int) (Integer.MAX_VALUE / localFixed);
+        int localMin = -localMax;
+        if (max == null) {
+            max = localMax;
+        } else if (max > localMax) {
+            final String message = "Max specified (%d) is out of range with fixed. "
+                    + "Max should be, at most, %d";
+            throw new ChanceException(String.format(message, max, localMax));
+        }
+        if (min == null) {
+            min = localMin;
+        } else if (min < localMin) {
+            final String message = "Min specified (%d) is out of range with fixed. "
+                    + "Min should be, at least, %d";
+            throw new ChanceException(String.format(message, min, localMin));
+        }
+        num = integer(min * localFixed, max * localFixed);
+        BigDecimal bd = new BigDecimal(num)
+                .divide(new BigDecimal(localFixed), MathContext.UNLIMITED);
+        return bd.setScale(fixed, RoundingMode.UP);
     }
 
     /**
      * Return a random floating point number.
+     * <pre>
+     * chance.floating(-10, 100, 2);
+     * => 57.66
+     * </pre>
+     *
+     * @param min Minimum value to choose from
+     * @param max Maximum value to choose from
+     * @param fixed Specify a fixed precision
+     * @return A random float
+     * @throws ChanceException Min cannot be greater than Max.
+     */
+    public float floating(Integer min, Integer max, int fixed) throws ChanceException {
+        return getBigDecimal(min, max, fixed).floatValue();
+    }
+
+    /**
+     * Return a random floating point number.
+     * <pre>
+     * chance.floating(2);
+     * => 48.92
+     * </pre>
      *
      * @param fixed Specify a fixed precision
-     * @return A single floating point number
+     * @return A random float
      * @throws ChanceException
      */
     public float floating(int fixed) throws ChanceException {
-        return floating(-1, -1, fixed);
+        return floating(null, null, fixed);
+    }
+
+    /**
+     * Return a random floating point number with fixed size
+     * {@value #DECIMAL_SIZE_DEFAULT_VALUE}.
+     * <pre>
+     * chance.floating();
+     * => -89.31
+     * chance.floating();
+     * => 94.31
+     * </pre>
+     *
+     * @return A random float
+     * @throws ChanceException
+     */
+    public float floating() throws ChanceException {
+        return floating(DECIMAL_SIZE_DEFAULT_VALUE);
+    }
+
+    /**
+     * Return a random floating point number.
+     * <pre>
+     * chance.getFloat(-10, 100, 2);
+     * => 57.66
+     * </pre>
+     *
+     * @param min Minimum value to choose from
+     * @param max Maximum value to choose from
+     * @param fixed Specify a fixed precision
+     * @return A random float
+     * @throws ChanceException Min cannot be greater than Max.
+     */
+    public float getFloat(Integer min, Integer max, int fixed) throws ChanceException {
+        return floating(min, max, fixed);
+    }
+
+    /**
+     * Return a random floating point number.
+     * <pre>
+     * chance.getFloat(2);
+     * => 48.92
+     * </pre>
+     *
+     * @param fixed Specify a fixed precision
+     * @return A random float
+     * @throws ChanceException
+     */
+    public float getFloat(int fixed) throws ChanceException {
+        return floating(fixed);
+    }
+
+    /**
+     * Return a random floating point number.
+     * <pre>
+     * chance.getFloat();
+     * => -89.31
+     * chance.getFloat();
+     * => 94.31
+     * </pre>
+     *
+     * @return A random float
+     * @throws ChanceException
+     */
+    public float getFloat() throws ChanceException {
+        return floating();
+    }
+
+    /**
+     * Return a random floating positive point number.
+     * <pre>
+     * chance.getFloatPositive(2);
+     * => 48.92
+     * </pre>
+     *
+     * @param fixed Specify a fixed precision
+     * @return A random float
+     * @throws ChanceException
+     */
+    public float getFloatPositive(int fixed) throws ChanceException {
+        int limit = (int) Math.pow(10, fixed + FORCE_INCREASE_FIXED);
+        return floating(0, (int) Integer.MAX_VALUE / limit, fixed);
+    }
+
+    /**
+     * Return a random floating positive point number with fixed size
+     * {@value #DECIMAL_SIZE_DEFAULT_VALUE}.
+     * <pre>
+     * chance.getFloatPositive();
+     * => 51.63
+     * chance.getFloatPositive();
+     * => 77.39
+     * </pre>
+     *
+     * @return A random float
+     * @throws ChanceException
+     */
+    public float getFloatPositive() throws ChanceException {
+        return getFloatPositive(DECIMAL_SIZE_DEFAULT_VALUE);
+    }
+
+    /**
+     * Return a random double.
+     * <pre>
+     * chance.getDouble(-10, 100, 3);
+     * => -6.742
+     * </pre>
+     *
+     * @param min Minimum value to choose from
+     * @param max Maximum value to choose from
+     * @param fixed Specify a fixed precision
+     * @return A random double
+     * @throws ChanceException
+     */
+    public double getDouble(Integer min, Integer max, int fixed) throws ChanceException {
+        return getBigDecimal(min, max, fixed).doubleValue();
+    }
+
+    /**
+     * Return a random double.
+     * <pre>
+     * chance.getDouble(3);
+     * => 82.325
+     * </pre>
+     *
+     * @param fixed Specify a fixed precision
+     * @return A random double
+     * @throws ChanceException
+     */
+    public double getDouble(int fixed) throws ChanceException {
+        return getDouble(null, null, fixed);
+    }
+
+    /**
+     * Return a random double with fixed size
+     * {@value #DECIMAL_SIZE_DEFAULT_VALUE}.
+     * <pre>
+     * chance.getDouble();
+     * => -5.33
+     * </pre>
+     *
+     * @return A random double
+     * @throws ChanceException
+     */
+    public double getDouble() throws ChanceException {
+        return getDouble(DECIMAL_SIZE_DEFAULT_VALUE);
+    }
+
+    /**
+     * Return a random double.
+     * <pre>
+     * chance.getDoublePositive(3);
+     * => 82.325
+     * </pre>
+     *
+     * @param fixed Specify a fixed precision
+     * @return A random double
+     * @throws ChanceException
+     */
+    public double getDoublePositive(int fixed) throws ChanceException {
+        int limit = (int) Math.pow(10, fixed + FORCE_INCREASE_FIXED);
+        return getDouble(0, (int) Integer.MAX_VALUE / limit, fixed);
+    }
+
+    /**
+     * Return a random double with fixed size
+     * {@value #DECIMAL_SIZE_DEFAULT_VALUE}.
+     * <pre>
+     * chance.getDoublePositive();
+     * => 82.32
+     * </pre>
+     *
+     * @return A random double
+     * @throws ChanceException
+     */
+    public double getDoublePositive() throws ChanceException {
+        return getDoublePositive(DECIMAL_SIZE_DEFAULT_VALUE);
     }
 
     /**

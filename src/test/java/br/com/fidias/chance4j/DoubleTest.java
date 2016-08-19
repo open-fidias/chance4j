@@ -35,11 +35,13 @@ import org.junit.runners.Parameterized;
  * @author atila
  */
 @RunWith(Parameterized.class)
-public class LongTest extends AbstractChanceTesting {
+public class DoubleTest extends AbstractChanceTesting {
 
-    private final long min, max;
+    private final Integer min, max;
+    private final static int LIMIT_NUMBER =
+            (int) Math.pow(10, Chance.DECIMAL_SIZE_DEFAULT_VALUE + Chance.FORCE_INCREASE_FIXED);
 
-    public LongTest(long min, long max) {
+    public DoubleTest(Integer min, Integer max) {
         this.min = min;
         this.max = max;
     }
@@ -52,23 +54,24 @@ public class LongTest extends AbstractChanceTesting {
             {10, 100},
             {1000, 100000},
             {-25, 0},
-            {-25045667, 90365489},
+            {-210456, 213654},
             {-250, -110},
-            {1000, Long.MAX_VALUE},
-            {Long.MIN_VALUE, 0},
-            {Long.MIN_VALUE, Long.MAX_VALUE},});
+            {1000, (int) Integer.MAX_VALUE / LIMIT_NUMBER},
+            {(int) Integer.MIN_VALUE / LIMIT_NUMBER, 0},
+            {(int) Integer.MIN_VALUE / LIMIT_NUMBER, (int) Integer.MAX_VALUE / LIMIT_NUMBER}
+        });
     }
 
     @Test(expected = ChanceException.class)
     public void minGreaterThanMax() throws ChanceException {
-        chance.getLong(max, min);
+        chance.getDouble(max, min, Chance.DECIMAL_SIZE_DEFAULT_VALUE);
     }
-
+    
     @Test
     public void positiveCount() throws ChanceException {
-        int positiveCount = 0;
+        long positiveCount = 0;
         for (int i = 0; i < 1000; i++) {
-            if (chance.getLong() > 0) {
+            if (chance.getDouble() > 0) {
                 positiveCount++;
             }
         }
@@ -77,8 +80,23 @@ public class LongTest extends AbstractChanceTesting {
     }
 
     @Test
-    public void randomLong() throws ChanceException {
-        long value = chance.getLong(min, max);
-        assertTrue("random long", value >= min && value <= max);
+    public void randomDouble() throws ChanceException {
+        double value = chance.getDouble(min, max, Chance.DECIMAL_SIZE_DEFAULT_VALUE);
+        assertTrue("random double", value >= min && value <= max);
+    }
+    
+    @Test
+    public void randomDoubleFixedSize() throws ChanceException {
+        int fixed, indexOf;
+        double value;
+        String result;
+        for (int i = 0; i < 1000; i++) {
+            fixed = chance.natural(1, 6);
+            value = chance.getDoublePositive(fixed);
+            result = String.valueOf(value);
+            indexOf = result.indexOf(".");
+            assertTrue("random double with fixed size",
+                    result.substring(indexOf + 1).length() <= fixed);
+        }
     }
 }
