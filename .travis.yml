@@ -11,4 +11,5 @@ install:
   - chmod u+x mvnw
   - ./mvnw install -DskipTests=true -Dsource.skip=true -Dgpg.skip=true -Dmaven.javadoc.skip=true -B -V
 script: ./mvnw test
-
+after_success:
+  - ./mvnw clean test jacoco:report coveralls:report
