@@ -5,7 +5,7 @@
  * Based on the <http://chancejs.com> by Victor Quinn and contributors
  *
  * Copyright (C) 2016 Átila Camurça <camurca.home@gmail.com>
- * Fidias Free Source Team <fidiascom@gmail.com>
+ * Fidias Free and Open Source Team <fidiascom@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -957,6 +957,12 @@ public class Chance {
 
     /**
      * Return a random gender, either Male or Female.
+     * <pre>
+     * chance.gender();
+     * => Male
+     * chance.gender();
+     * => Female
+     * </pre>
      *
      * @return A random gender
      */
@@ -974,6 +980,12 @@ public class Chance {
 
     /**
      * Return a random gender, either Male or Female in plain text.
+     * <pre>
+     * chance.gender();
+     * => "Male"
+     * chance.gender();
+     * => "Female"
+     * </pre>
      *
      * @return A random gender
      */
@@ -983,6 +995,10 @@ public class Chance {
 
     /**
      * Return a random Nationality.
+     * <pre>
+     * chance.nationality();
+     * => Brazilian
+     * </pre>
      *
      * @return A random nationality
      */
@@ -1000,6 +1016,10 @@ public class Chance {
 
     /**
      * Return a random Nationality in plain text.
+     * <pre>
+     * chance.nationality();
+     * => "Brazilian"
+     * </pre>
      *
      * @return A random nationality
      */
@@ -1026,6 +1046,12 @@ public class Chance {
 
     /**
      * Generate a random first name, specifying a gender and a nationality.
+     * <pre>
+     * chance.firstName(Gender.Male, Nationality.Brazilian);
+     * => "Bernardo"
+     * chance.firstName(Gender.Female, Nationality.English);
+     * => "Jessie"
+     * </pre>
      *
      * @param gender Either Male or Female
      * @param nationality A nationality
@@ -1044,6 +1070,10 @@ public class Chance {
 
     /**
      * Generate a random first name, specifying a gender.
+     * <pre>
+     * chance.firstName(Gender.Female);
+     * => "Daisy"
+     * </pre>
      *
      * @param gender Either Male or Female
      * @return A random first name
@@ -1055,6 +1085,10 @@ public class Chance {
 
     /**
      * Generate a random first name, specifying a nationality.
+     * <pre>
+     * chance.firstName(Nationality.Italian);
+     * => "Loretta"
+     * </pre>
      *
      * @param nationality A nationality
      * @return A random first name
@@ -1066,6 +1100,10 @@ public class Chance {
 
     /**
      * Generate a random first name.
+     * <pre>
+     * chance.firstName();
+     * => "Gabriela"
+     * </pre>
      *
      * @return A random first name
      */
@@ -1077,6 +1115,10 @@ public class Chance {
 
     /**
      * Generate a random last name, specifying a nationality.
+     * <pre>
+     * chance.lastName(Nationality.English);
+     * => "Erickson"
+     * </pre>
      *
      * @param nationality A nationality
      * @return A random last name
@@ -1094,6 +1136,10 @@ public class Chance {
 
     /**
      * Generate a random last name.
+     * <pre>
+     * chance.lastName();
+     * => "Nannucci"
+     * </pre>
      *
      * @return A random last name
      */
@@ -1104,6 +1150,12 @@ public class Chance {
 
     /**
      * Generate a random name prefix, specifying a gender.
+     * <pre>
+     * chance.namePrefix(Gender.Male, PrefixSuffixOptions.full);
+     * => "Sir"
+     * chance.namePrefix(Gender.Female, PrefixSuffixOptions.abbreviated);
+     * => "Mrs."
+     * </pre>
      *
      * @param gender Either Male or Female
      * @param options Either full or abbreviated
@@ -1122,6 +1174,10 @@ public class Chance {
 
     /**
      * Generate a random name prefix.
+     * <pre>
+     * chance.namePrefix(PrefixSuffixOptions.abbreviated);
+     * => "Dr."
+     * </pre>
      *
      * @param options Either full or abbreviated
      * @return A random name prefix
@@ -1133,6 +1189,10 @@ public class Chance {
 
     /**
      * Generate a random name prefix.
+     * <pre>
+     * chance.namePrefix();
+     * => "Mister"
+     * </pre>
      *
      * @return A random name prefix
      */
@@ -1143,6 +1203,13 @@ public class Chance {
 
     /**
      * Generate a random name, especifying a gender, a nationality and options.
+     * <pre>
+     * NameOptions nameOptions = new NameOptions();
+     * nameOptions.setMiddle(true);
+     * nameOptions.setPrefix(true);
+     * chance.name(Gender.Male, Nationality.Brazilian, nameOptions, PrefixSuffixOptions.full);
+     * => "Mister Samuel Ian Caldeira"
+     * </pre>
      *
      * @param gender Either Male or Female
      * @param nationality A nationality
@@ -1176,9 +1243,35 @@ public class Chance {
 
         return name;
     }
+    
+    /**
+     * Generate a random name, especifying a gender, a nationality and options.
+     * <pre>
+     * NameOptions nameOptions = new NameOptions();
+     * nameOptions.setMiddle(true);
+     * chance.name(Gender.Male, Nationality.Brazilian, nameOptions);
+     * => "Diogo Guilherme da Cunha"
+     * </pre>
+     *
+     * @param gender Either Male or Female
+     * @param nationality A nationality
+     * @param nameOptions Name Options
+     * @return A random name
+     */
+    public String name(Gender gender, Nationality nationality,
+            NameOptions nameOptions) {
+        return name(gender, nationality, nameOptions, null);
+    }
 
     /**
      * Generate a random name, especifying a nationality and options.
+     * <pre>
+     * NameOptions nameOptions = new NameOptions();
+     * nameOptions.setMiddleInitial(true);
+     * nameOptions.setPrefix(true);
+     * chance.name(Nationality.Brazilian, nameOptions, PrefixSuffixOptions.full);
+     * => "Doctor Juan V. Moraes"
+     * </pre>
      *
      * @param nationality A nationality
      * @param nameOptions Name Options
@@ -1190,9 +1283,34 @@ public class Chance {
         Gender gender = gender();
         return name(gender, nationality, nameOptions, psOptions);
     }
+    
+    /**
+     * Generate a random name, especifying a nationality and options.
+     * <pre>
+     * NameOptions nameOptions = new NameOptions();
+     * nameOptions.setMiddle(true);
+     * chance.name(Nationality.Brazilian, nameOptions);
+     * => "Otávio Vinicius da Luz"
+     * </pre>
+     *
+     * @param nationality A nationality
+     * @param nameOptions Name Options
+     * @return A random name
+     */
+    public String name(Nationality nationality,
+            NameOptions nameOptions) {
+        return name(nationality, nameOptions, null);
+    }
 
     /**
      * Generate a random name.
+     * <pre>
+     * NameOptions nameOptions = new NameOptions();
+     * nameOptions.setMiddleInitial(true);
+     * nameOptions.setPrefix(true);
+     * chance.name(nameOptions, PrefixSuffixOptions.abbreviated);
+     * => "Dr. Tiago B. Vieira"
+     * </pre>
      *
      * @param nameOptions Name Options
      * @param psOptions Prefix options
@@ -1202,9 +1320,29 @@ public class Chance {
         Nationality nationality = nationality();
         return name(nationality, nameOptions, psOptions);
     }
+    
+    /**
+     * Generate a random name.
+     * <pre>
+     * NameOptions nameOptions = new NameOptions();
+     * nameOptions.setMiddleInitial(true);
+     * chance.name(nameOptions);
+     * => "Lavínia I. Cavalcanti"
+     * </pre>
+     *
+     * @param nameOptions Name Options
+     * @return A random name
+     */
+    public String name(NameOptions nameOptions) {
+        return name(nameOptions, null);
+    }
 
     /**
      * Generate a random name.
+     * <pre>
+     * chance.name();
+     * => "Paola Mendes"
+     * </pre>
      *
      * @return A random name
      */
@@ -1215,6 +1353,11 @@ public class Chance {
 
     /**
      * Generate a random social security number.
+     * <pre>
+     * SsnOptions ssnOptions = new SsnOptions();
+     * chance.ssn(ssnOptions);
+     * => "867-53-0231"
+     * </pre>
      *
      * @param options size (four or nine) and dash options
      * @return a random social security number
@@ -1240,6 +1383,12 @@ public class Chance {
 
     /**
      * Generate a random social security number.
+     * <pre>
+     * chance.ssn(SsnOptions.Length.nine);
+     * => 569615983
+     * chance.ssn(SsnOptions.Length.four);
+     * => 8423
+     * </pre>
      *
      * @param length either four or nine
      * @return a random social security number
@@ -1255,6 +1404,10 @@ public class Chance {
 
     /**
      * Generate a random social security number.
+     * <pre>
+     * chance.ssn();
+     * => "287-01-7258"
+     * </pre>
      *
      * @return a random social security number
      * @throws ChanceException
@@ -1284,6 +1437,10 @@ public class Chance {
 
     /**
      * Generate a random age, based on AgeOptions.
+     * <pre>
+     * chance.age(AgeOptions.adult);
+     * => 31
+     * </pre>
      *
      * @param options Age options
      * @return A random age
@@ -1303,6 +1460,10 @@ public class Chance {
 
     /**
      * Generate a random age.
+     * <pre>
+     * chance.age();
+     * => 14
+     * </pre>
      *
      * @return A random age
      */
@@ -1426,6 +1587,10 @@ public class Chance {
 
     /**
      * Generate a random second.
+     * <pre>
+     * chance.second();
+     * => 8
+     * </pre>
      *
      * @return A random second
      */
@@ -1435,6 +1600,10 @@ public class Chance {
 
     /**
      * Generate a random millisecond.
+     * <pre>
+     * chance.millisecond();
+     * => 939
+     * </pre>
      *
      * @return A random millisecond
      */
@@ -1444,6 +1613,10 @@ public class Chance {
 
     /**
      * Generate a random minute.
+     * <pre>
+     * chance.minute();
+     * => 14
+     * </pre>
      *
      * @return A random minute
      */
@@ -1453,6 +1626,10 @@ public class Chance {
 
     /**
      * Generate a random hour.
+     * <pre>
+     * chance.hour(Hour.twenty_four);
+     * => 22
+     * </pre>
      *
      * @param hour 24 or 12 style
      * @return A random hour
@@ -1466,6 +1643,10 @@ public class Chance {
 
     /**
      * Generate a random hour, with 24 style.
+     * <pre>
+     * chance.hour();
+     * => 15
+     * </pre>
      *
      * @return A random hour
      */
