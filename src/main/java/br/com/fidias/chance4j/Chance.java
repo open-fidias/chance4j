@@ -66,8 +66,8 @@ public class Chance {
     /**
      * Force increase the localFixed value in
      * {@link Chance#getBigDecimal(java.lang.Integer, java.lang.Integer, int)}
-     * to obtain a smaller number to maxLocal.
-     * Otherwise the double value will overflow and give wrong number of decimals.
+     * to obtain a smaller number to maxLocal. Otherwise the double value will
+     * overflow and give wrong number of decimals.
      */
     public final static int FORCE_INCREASE_FIXED = 2;
     public final static int MIN_SENTENCES_FOR_PARAGRAPH = 3;
@@ -96,7 +96,11 @@ public class Chance {
     }
 
     /**
-     * Return a random integer.
+     * Return a random integer between min and max.
+     * <pre>
+     * chance.integer(1, 10);
+     * => 6
+     * </pre>
      *
      * @param min Minimum value to choose from
      * @param max Maximum value to choose from
@@ -111,7 +115,14 @@ public class Chance {
     }
 
     /**
-     * Return a random integer.
+     * Return a random integer between {@value Integer#MIN_VALUE} and
+     * {@value Integer#MAX_VALUE}.
+     * <pre>
+     * chance.integer();
+     * => 4529
+     * chance.integer();
+     * => -908
+     * </pre>
      *
      * @return A single random integer number
      * @throws ChanceException
@@ -121,15 +132,15 @@ public class Chance {
     }
 
     /**
-     * Return a random long.
+     * Return a random long between min and max.
      * <pre>
      * chance.getLong(0, 100);
      * => 42
      * </pre>
      *
-     * @param min
-     * @param max
-     * @return
+     * @param min Minimum value to choose from
+     * @param max Maximum value to choose from
+     * @return A single random long number
      * @throws ChanceException
      */
     public long getLong(long min, long max) throws ChanceException {
@@ -140,19 +151,31 @@ public class Chance {
     }
 
     /**
-     * Return a random long.
+     * Return a random long between {@value Long#MIN_VALUE} and
+     * {@value Long#MAX_VALUE}.
      * <pre>
      * chance.getLong();
      * => 16
+     * chance.getLong();
+     * => -921
      * </pre>
      *
-     * @return
+     * @return A single random long number
      * @throws ChanceException
      */
     public long getLong() throws ChanceException {
         return getLong(Long.MIN_VALUE, Long.MAX_VALUE);
     }
 
+    /**
+     * Return a random natural between 0 and {@value Integer#MAX_VALUE}.
+     * <pre>
+     * chance.natural();
+     * => 873
+     * </pre>
+     *
+     * @return A single random natural integer number
+     */
     public int natural() {
         int result = 0;
         try {
@@ -163,16 +186,31 @@ public class Chance {
         return result;
     }
 
+    /**
+     * Return a random natural between 0 and max.
+     * <pre>
+     * chance.natural(10);
+     * => 2
+     * </pre>
+     *
+     * @param max Maximum value to choose from
+     * @return A single random natural integer number
+     * @throws ChanceException
+     */
     public int natural(int max) throws ChanceException {
         return natural(0, max);
     }
 
     /**
      * Return a random natural. NOTE the max and min are INCLUDED in the range.
+     * <pre>
+     * chance.natural(10, 20);
+     * => 12
+     * </pre>
      *
      * @param min Minimum value to choose from
      * @param max Maximum value to choose from
-     * @return A single random integer number
+     * @return A single random natural integer number
      * @throws ChanceException min cannot be greater than max. Min cannot be
      * less than zero. Max must be greater than zero.
      */
@@ -191,6 +229,12 @@ public class Chance {
 
     /**
      * Return a random bool, either true or false.
+     * <pre>
+     * chance.bool(50);
+     * => true
+     * chance.bool(50);
+     * => false
+     * </pre>
      *
      * @param likelihood Alter the likelihood of receiving a true or false value
      * back.
@@ -206,6 +250,12 @@ public class Chance {
 
     /**
      * Return a random bool, either true or false.
+     * <pre>
+     * chance.bool();
+     * => true
+     * chance.bool();
+     * => false
+     * </pre>
      *
      * @return Either true or false
      */
@@ -491,6 +541,19 @@ public class Chance {
 
     /**
      * Return a random character.
+     * <pre>
+     * TextOptions options = new TextOptions();
+     * options.setCasing(TextOptions.Casing.lower);
+     * options.setPoolType(TextOptions.PoolType.alpha);
+     * chance.character(options);
+     * => 'g'
+     * options.setCasing(TextOptions.Casing.upper);
+     * chance.character(options);
+     * => 'R'
+     * options.setPoolType(TextOptions.PoolType.numeric);
+     * chance.character(options);
+     * => '9'
+     * </pre>
      *
      * @param options Can specify a character pool, only alpha, only symbols,
      * and casing (lower or upper)
@@ -504,6 +567,17 @@ public class Chance {
 
     /**
      * Return a random string.
+     * <pre>
+     * TextOptions options = new TextOptions();
+     * options.setCasing(TextOptions.Casing.lower);
+     * options.setPoolType(TextOptions.PoolType.alpha);
+     * chance.string(options, 10);
+     * => "fuklnbvsas"
+     * options.setCasing(TextOptions.Casing.both);
+     * options.setPoolType(TextOptions.PoolType.any);
+     * chance.string(options, 10);
+     * => "s&o99W0Bn%"
+     * </pre>
      *
      * @param options Can specify a character pool, only alpha, only symbols,
      * and casing (lower or upper)
@@ -520,7 +594,18 @@ public class Chance {
     }
 
     /**
-     * Return a random string.
+     * Return a random string with length between {@value #MIN_CHARS_FOR_STRING}
+     * and {@value #MAX_CHARS_FOR_STRING}.
+     * <pre>
+     * TextOptions options = new TextOptions();
+     * options.setCasing(TextOptions.Casing.lower);
+     * options.setPoolType(TextOptions.PoolType.alpha);
+     * chance.string(options);
+     * => "qwertyui"
+     * options.setPoolType(TextOptions.PoolType.numeric);
+     * chance.string(options);
+     * => "203674584214"
+     * </pre>
      *
      * @param options Can specify a character pool, only alpha, only symbols,
      * and casing (lower or upper)
@@ -528,15 +613,22 @@ public class Chance {
      * @throws ChanceException
      */
     public String string(TextOptions options) throws ChanceException {
-        int length = natural(5, 20);
+        int length = natural(MIN_CHARS_FOR_STRING, MAX_CHARS_FOR_STRING);
         char[] characters = characters(options, length);
         return String.valueOf(characters);
     }
 
     /**
-     * Return a semi-speakable syllable, 2 or 3 letters.
+     * Return a semi-speakable syllable, {@value #MIN_CHAR_FOR_SYLLABLE} or
+     * {@value #MAX_CHAR_FOR_SYLLABLE} letters.
+     * <pre>
+     * chance.syllable();
+     * => "ne"
+     * chance.syllable();
+     * => "law"
+     * </pre>
      *
-     * @return
+     * @return A semi-speakable syllable
      */
     public String syllable() {
         String result = "";
@@ -568,8 +660,8 @@ public class Chance {
     /**
      * Return a semi-pronounceable random (nonsense) array of words.
      *
-     * @param length
-     * @return
+     * @param length Specify a length
+     * @return A semi-pronounceable random array of words
      */
     private String[] words(int length) {
         String[] words = new String[length];
@@ -581,10 +673,16 @@ public class Chance {
 
     /**
      * Return a semi-pronounceable random (nonsense) word.
+     * <pre>
+     * chance.word(3, true);
+     * => "Janawuma"
+     * chance.word(3, false);
+     * => "elbizir"
+     * </pre>
      *
-     * @param numSyllables
-     * @param capitalize
-     * @return
+     * @param numSyllables Number of syllables of the word
+     * @param capitalize Capitalize or not
+     * @return A semi-pronounceable random word
      */
     public String word(int numSyllables, boolean capitalize) {
         String result = "";
@@ -596,9 +694,13 @@ public class Chance {
 
     /**
      * Return a semi-pronounceable random (nonsense) word.
+     * <pre>
+     * chance.word(3);
+     * => "vezfufe"
+     * </pre>
      *
-     * @param numSyllables
-     * @return
+     * @param numSyllables Number of syllables of the word
+     * @return A semi-pronounceable random word
      */
     public String word(int numSyllables) {
         return word(numSyllables, false);
@@ -606,26 +708,29 @@ public class Chance {
 
     /**
      * Return a semi-pronounceable random (nonsense) word.
+     * <pre>
+     * chance.word();
+     * => "befmiisi"
+     * </pre>
      *
-     * @return
+     * @return A semi-pronounceable random word
      */
     public String word() {
-        String result = "";
+        int natural = 0;
         try {
-            int natural = natural(MIN_SYLLABLES_FOR_WORD, MAX_SYLLABLES_FOR_WORD);
-            result = word(natural);
+            natural = natural(MIN_SYLLABLES_FOR_WORD, MAX_SYLLABLES_FOR_WORD);
         } catch (Exception e) {
             // it's never throw
         }
-        return result;
+        return word(natural);
     }
 
     /**
      * Return a random array of sentences populated by semi-pronounceable random
      * (nonsense) words.
      *
-     * @param length
-     * @return
+     * @param length Specify a length
+     * @return A random array of sentences
      * @throws ChanceException
      */
     private String[] sentences(int length) throws ChanceException {
@@ -639,9 +744,13 @@ public class Chance {
     /**
      * Return a random sentence populated by semi-pronounceable random
      * (nonsense) words.
+     * <pre>
+     * chance.sentence(3);
+     * => "Rinket evcaltip wupiir."
+     * </pre>
      *
-     * @param numWords
-     * @return
+     * @param numWords Number of wrods of the sentence
+     * @return A random sentence
      * @throws ChanceException
      */
     public String sentence(int numWords) throws ChanceException {
@@ -657,8 +766,12 @@ public class Chance {
     /**
      * Return a random sentence populated by semi-pronounceable random
      * (nonsense) words.
+     * <pre>
+     * chance.sentence();
+     * => "Wucij ocgicoka la noejami luike dulsatgu es tutlas rafu ajaju tis pece."
+     * </pre>
      *
-     * @return
+     * @return A random sentence
      * @throws ChanceException
      */
     public String sentence() throws ChanceException {
@@ -669,9 +782,13 @@ public class Chance {
     /**
      * Return a random paragraph generated from sentences populated by
      * semi-pronounceable random (nonsense) words.
+     * <pre>
+     * chance.paragraph(3);
+     * => "Latec luuce ros josfi falkiom tefa lubga vaf dut taawjo atuli busucom elievez iku: Gas pefa jiponag imsa hawamde ja imawe cuzif imhulke wa ivuwikot fo nobwo du vad. Esurah lur ozasak ahir fah up co ackazfew esgiw juszo zukaddo bure kimefiba de mekapeget wor asledo waagzuc:"
+     * </pre>
      *
-     * @param numSentences
-     * @return
+     * @param numSentences Number of sentences of the paragraph
+     * @return A random paragraph
      * @throws ChanceException
      */
     public String paragraph(int numSentences) throws ChanceException {
@@ -682,8 +799,12 @@ public class Chance {
     /**
      * Return a random paragraph generated from sentences populated by
      * semi-pronounceable random (nonsense) words.
+     * <pre>
+     * chance.paragraph();
+     * => "Mejatuw nedosud bek evucozalu gavrittat abvopi uwufej pugo oz no vuk fotos jopudle zaveb zatkaro bopovsi. Ewo hen ap cuciv iwo wos udtut ru asoabu wopun lijbow wijwewo neatuaj dofic. Rucgidok anebno lev sorzibfit dadup ikcek duhawcab sur jedor katorkew sastulep ahe gufojel ofikep umvo suncu kujapoc et; Lacajomo wikohsej ce napawjuc ga bu hovub joh ivi sije ib hoew re boapaihe."
+     * </pre>
      *
-     * @return
+     * @return A random paragraph
      * @throws ChanceException
      */
     public String paragraph() throws ChanceException {
@@ -693,6 +814,10 @@ public class Chance {
 
     /**
      * Return a random valid Brazilian CPF.
+     * <pre>
+     * chance.cpf();
+     * => 68838982716
+     * </pre>
      *
      * @return A random CPF
      */
@@ -722,8 +847,14 @@ public class Chance {
     /**
      * Return a random valid Brazilian CPF, either unmasked (00000000000) or
      * masked (000.000.000-00).
+     * <pre>
+     * chance.cpfAsText(CpfOptions.masked);
+     * => "506.385.808-20"
+     * chance.cpfAsText(CpfOptions.ummasked);
+     * => "50638580820"
+     * </pre>
      *
-     * @param options
+     * @param options Masked or unmasked CPF
      * @return A random valid CPF
      */
     public String cpfAsText(CpfOptions options) {
@@ -741,6 +872,10 @@ public class Chance {
 
     /**
      * Return a random valid masked Brazilian CPF.
+     * <pre>
+     * chance.cpfAsText();
+     * => "628.946.293-89"
+     * </pre>
      *
      * @return A random valid masked CPF
      */
@@ -750,6 +885,10 @@ public class Chance {
 
     /**
      * Return a random valid Brazilian CNPJ.
+     * <pre>
+     * chance.cnpj();
+     * => 13611628000175
+     * </pre>
      *
      * @return A random CNPJ
      */
@@ -780,6 +919,12 @@ public class Chance {
     /**
      * Return a random valid Brazilian CNPJ, either unmasked (00000000000000) or
      * masked (00.000.000/0000-00).
+     * <pre>
+     * chance.cnpj(CnpjOptions.masked);
+     * => "85.263.024/0001-96"
+     * chance.cnpj(CnpjOptions.unmasked);
+     * => "85263024000196"
+     * </pre>
      *
      * @param options
      * @return A random CNPJ
@@ -799,6 +944,10 @@ public class Chance {
 
     /**
      * Return a random valid masked Brazilian CNPJ.
+     * <pre>
+     * chance.cnpj(CnpjOptions.masked);
+     * => "85.263.024/0001-96"
+     * </pre>
      *
      * @return A random CNPJ
      */
@@ -824,6 +973,15 @@ public class Chance {
     }
 
     /**
+     * Return a random gender, either Male or Female in plain text.
+     *
+     * @return A random gender
+     */
+    public String genderAsText() {
+        return gender().name();
+    }
+
+    /**
      * Return a random Nationality.
      *
      * @return A random nationality
@@ -841,6 +999,15 @@ public class Chance {
     }
 
     /**
+     * Return a random Nationality in plain text.
+     *
+     * @return A random nationality
+     */
+    public String nationalityAsText() {
+        return nationality().name();
+    }
+
+    /**
      * Return a random Prefix or Suffix name option.
      *
      * @return A random Prefix or Suffix option
@@ -855,15 +1022,6 @@ public class Chance {
             // it's never throw
         }
         return values[natural];
-    }
-
-    /**
-     * Return a random gender, either Male or Female as plain text.
-     *
-     * @return A random gender
-     */
-    public String genderAsText() {
-        return gender().name();
     }
 
     /**
