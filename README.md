@@ -4,7 +4,7 @@
 
 [![Build Status](https://travis-ci.org/open-fidias/chance4j.svg?branch=master)](https://travis-ci.org/open-fidias/chance4j)
 [![Javadocs](http://www.javadoc.io/badge/com.github.open-fidias/chance4j.svg)](http://www.javadoc.io/doc/com.github.open-fidias/chance4j)
-[![Coverage Status](https://coveralls.io/repos/github/open-fidias/chance4j/badge.svg?branch=coveralls-plugin-setup)](https://coveralls.io/github/open-fidias/chance4j?branch=coveralls-plugin-setup)
+[![Coverage Status](https://coveralls.io/repos/github/open-fidias/chance4j/badge.svg?branch=master)](https://coveralls.io/github/open-fidias/chance4j?branch=master)
 
 Homepage: <https://github.com/open-fidias/chance4j>
 
