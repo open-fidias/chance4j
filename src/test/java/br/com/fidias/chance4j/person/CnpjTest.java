@@ -23,6 +23,7 @@
 package br.com.fidias.chance4j.person;
 
 import br.com.fidias.chance4j.AbstractChanceTesting;
+import br.com.fidias.chance4j.ChanceException;
 import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
@@ -49,6 +50,18 @@ public class CnpjTest extends AbstractChanceTesting {
             cnpj = chance.cnpjAsText(CnpjOptions.masked);
             assertTrue("random valid cnpj", isMasked(cnpj));
         }
+    }
+    
+    @Test(expected = ChanceException.class)
+    public void wrongNumberOfValuesOnDigitOne() throws ChanceException {
+        int[] values = new int[9];
+        Cnpj.calculateVerifyingDigitOne(values);
+    }
+    
+    @Test(expected = ChanceException.class)
+    public void wrongNumberOfValuesOnDigitTwo() throws ChanceException {
+        int[] values = new int[9];
+        Cnpj.calculateVerifyingDigitTwo(values, 0);
     }
 
     private static boolean isValid(String cnpj) {

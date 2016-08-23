@@ -25,77 +25,78 @@ package br.com.fidias.chance4j;
 import static br.com.fidias.chance4j.AbstractChanceTesting.chance;
 import java.util.Arrays;
 import java.util.Collection;
+import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
-import static org.junit.Assert.assertTrue;
 
 /**
  *
  * @author atila
  */
 @RunWith(Parameterized.class)
-public class NaturalTest extends AbstractChanceTesting {
+public class FloatTest extends AbstractChanceTesting {
     
-    private final int min, max;
+    private final Integer min, max;
+    private final static int LIMIT_NUMBER =
+            (int) Math.pow(10, Chance.DECIMAL_SIZE_DEFAULT_VALUE + Chance.FORCE_INCREASE_FIXED);
     
-    public NaturalTest(int min, int max) {
+    public FloatTest(Integer min, Integer max) {
         this.min = min;
         this.max = max;
     }
     
     @Parameterized.Parameters
     public static Collection<Object[]> data() {
-        return Arrays.asList(new Object[][] {
+        return Arrays.asList(new Object[][]{
             {0, 10},
             {5, 7},
             {10, 100},
             {1000, 100000},
-            {25, 45678},
-            {25045667, 90365489},
-            {250, 1100},
-            {1000, Integer.MAX_VALUE},
-            {0, 1},
-            {0, Integer.MAX_VALUE},
+            {-25, 0},
+            {-210456, 213654},
+            {-250, -110},
+            {1000, (int) Integer.MAX_VALUE / LIMIT_NUMBER},
+            {(int) Integer.MIN_VALUE / LIMIT_NUMBER, 0},
+            {(int) Integer.MIN_VALUE / LIMIT_NUMBER, (int) Integer.MAX_VALUE / LIMIT_NUMBER}
         });
     }
     
     @Test(expected = ChanceException.class)
-    public void minSmallerThanZero() throws ChanceException {
-        chance.natural(-max, 0);
+    public void minGreaterThanMax() throws ChanceException {
+        chance.getFloat(max, min, Chance.DECIMAL_SIZE_DEFAULT_VALUE);
     }
     
     @Test
-    public void positiveCount() {
-        int positiveCount = 0;
+    public void positiveCount() throws ChanceException {
+        long positiveCount = 0;
         for (int i = 0; i < 1000; i++) {
-            if (chance.natural() >= 0) {
+            if (chance.getFloat() > 0) {
                 positiveCount++;
             }
         }
-        assertTrue("always positive",
-                positiveCount == 1000);
+        assertTrue("is sometimes negative, sometimes positive",
+                positiveCount >= 200 && positiveCount <= 800);
     }
     
     @Test
-    public void aboveMinimum() throws ChanceException {
-        int natural = chance.natural(min, max);
-        assertTrue("is above minimum", natural >= min);
+    public void randomFloat() throws ChanceException {
+        float value = chance.getFloat(min, max, Chance.DECIMAL_SIZE_DEFAULT_VALUE);
+        assertTrue("random float", value >= min && value <= max);
     }
     
     @Test
-    public void belowMaximum() throws ChanceException {
-        int natural = chance.natural(min, max);
-        assertTrue("is below maximum", natural <= max);
-    }
-    
-    @Test(expected = ChanceException.class)
-    public void maxSmallerThanZero() throws ChanceException {
-        chance.natural(-10, -1);
-    }
-    
-    @Test(expected = ChanceException.class)
-    public void minGreaterThanMax() throws ChanceException {
-        chance.natural(max, min);
+    public void randomFloatFixedSize() throws ChanceException {
+        int fixed, indexOf;
+        float value;
+        String result;
+        for (int i = 0; i < 1000; i++) {
+            fixed = chance.natural(1, 6);
+            value = chance.getFloatPositive(fixed);
+            result = String.valueOf(value);
+            indexOf = result.indexOf(".");
+            assertTrue("random float with fixed size",
+                    result.substring(indexOf + 1).length() <= fixed);
+        }
     }
 }

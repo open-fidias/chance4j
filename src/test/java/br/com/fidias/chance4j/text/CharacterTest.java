@@ -20,12 +20,15 @@
  * You should have received a copy of the GNU General Public License along with
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package br.com.fidias.chance4j;
+package br.com.fidias.chance4j.text;
 
-import br.com.fidias.chance4j.text.TextOptions;
+import br.com.fidias.chance4j.AbstractChanceTesting;
+import br.com.fidias.chance4j.ChanceException;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.assertTrue;
+import br.com.fidias.chance4j.number.Number;
 
 /**
  *
@@ -95,5 +98,36 @@ public class CharacterTest extends AbstractChanceTesting {
             assertTrue("choose only from alpha numeric both lower and upper case",
                     String.valueOf(chr).matches("[a-zA-Z0-9]"));
         }
+    }
+    
+    @Test
+    public void chooseFromSymbols() throws ChanceException {
+        options.setPoolType(TextOptions.PoolType.symbols);
+        options.setCasing(TextOptions.Casing.both);
+        char chr;
+        for (int i = 0; i < 1000; i++) {
+            chr = chance.character(options);
+            assertTrue("choose only from symbols",
+                    StringUtils.containsOnly(String.valueOf(chr), Character.SYMBOLS));
+        }
+    }
+    
+    @Test
+    public void chooseFromAny() throws ChanceException {
+        String any = Character.CHARS_LOWER + Character.CHARS_UPPER + Number.NUMBERS + Character.SYMBOLS;
+        options.setPoolType(TextOptions.PoolType.any);
+        options.setCasing(TextOptions.Casing.both);
+        char chr;
+        for (int i = 0; i < 1000; i++) {
+            chr = chance.character(options);
+            assertTrue("choose from any",
+                    StringUtils.containsOnly(String.valueOf(chr), any));
+        }
+    }
+    
+    @Test(expected = ChanceException.class)
+    public void customPoolNotDefined() throws ChanceException {
+        options.setPoolType(TextOptions.PoolType.custom);
+        chance.character(options);
     }
 }

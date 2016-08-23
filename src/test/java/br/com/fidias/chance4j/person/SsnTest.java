@@ -46,4 +46,18 @@ public class SsnTest extends AbstractChanceTesting {
     private boolean isMasked(String cnpj) {
         return cnpj.matches("\\d{3}\\-\\d{2}\\-\\d{4}");
     }
+    
+    @Test
+    public void randomSsnLong() throws ChanceException {
+        SsnOptions.Length option;
+        SsnOptions.Length[] values = SsnOptions.Length.values();
+        int natural;
+        for (int i = 0; i < 1000; i++) {
+            natural = chance.natural(values.length - 1);
+            option = values[natural];
+            long value = chance.ssn(option);
+            ssn = String.valueOf(value);
+            assertTrue("random ssn length", ssn.length() <= option.getLength());
+        }
+    }
 }
