@@ -23,6 +23,7 @@
 package br.com.fidias.chance4j.person;
 
 import br.com.fidias.chance4j.AbstractChanceTesting;
+import br.com.fidias.chance4j.ChanceException;
 import org.junit.Test;
 import static org.junit.Assert.assertTrue;
 
@@ -49,6 +50,18 @@ public class CpfTest extends AbstractChanceTesting {
             cpf = chance.cpfAsText(CpfOptions.masked);
             assertTrue("random valid cpf", isMasked(cpf));
         }
+    }
+    
+    @Test(expected = ChanceException.class)
+    public void wrongNumberOfValuesOnDigitOne() throws ChanceException {
+        int[] values = new int[10];
+        Cpf.calculateVerifyingDigitOne(values);
+    }
+    
+    @Test(expected = ChanceException.class)
+    public void wrongNumberOfValuesOnDigitTwo() throws ChanceException {
+        int[] values = new int[10];
+        Cpf.calculateVerifyingDigitTwo(values, 0);
     }
 
     private static boolean isValid(String cpf) {

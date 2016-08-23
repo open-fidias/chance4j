@@ -47,6 +47,16 @@ public class NameTest extends AbstractChanceTesting {
             gender = chance.gender();
             nationality = chance.nationality();
             pso = chance.prefixSuffixOptions();
+            
+            if (i % 2 == 0) {
+                options.setMiddle(true);
+                options.setMiddleInitial(false);
+            } else {
+                options.setMiddle(false);
+                options.setMiddleInitial(true);
+            }
+            options.setPrefix(chance.bool());
+            
             name = chance.name(gender, nationality, options, pso);
             assertTrue("random name", name instanceof String);
         }

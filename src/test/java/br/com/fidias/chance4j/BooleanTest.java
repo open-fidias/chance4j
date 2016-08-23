@@ -20,52 +20,18 @@
  * You should have received a copy of the GNU General Public License along with
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package br.com.fidias.chance4j.person;
+package br.com.fidias.chance4j;
+
+import org.junit.Test;
 
 /**
  *
  * @author atila
  */
-public class SsnOptions {
+public class BooleanTest extends AbstractChanceTesting {
     
-    public enum Length {
-        four(4), nine(9);
-        
-        private final int length;
-        
-        private Length(int length) {
-            this.length = length;
-        }
-        
-        public int getLength() {
-            return length;
-        }
-    }
-    
-    private Length length;
-    private boolean dashes;
-    
-    /**
-     * Initialize SSN Options with length 9 with dashes.
-     */
-    public SsnOptions() {
-        this.length = Length.nine;
-        this.dashes = true;
-    }
-
-    public Length getLength() {
-        return length;
-    }
-
-    public void setLength(Length length) {
-        this.length = length;
-    }
-
-    public boolean isDashes() {
-        return dashes;
-    }
-
-    public void setDashes(boolean dashes) {
-        this.dashes = dashes;
+    @Test(expected = ChanceException.class)
+    public void likelihoodOutOfRange() throws ChanceException {
+        chance.bool(101);
     }
 }

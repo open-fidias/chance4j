@@ -99,4 +99,14 @@ public class DoubleTest extends AbstractChanceTesting {
                     result.substring(indexOf + 1).length() <= fixed);
         }
     }
+    
+    @Test(expected = ChanceException.class)
+    public void overflowMaxValue() throws ChanceException {
+        chance.getDouble(0, Integer.MAX_VALUE, 2);
+    }
+    
+    @Test(expected = ChanceException.class)
+    public void overflowMinValue() throws ChanceException {
+        chance.getDouble(Integer.MIN_VALUE, 100, 2);
+    }
 }
