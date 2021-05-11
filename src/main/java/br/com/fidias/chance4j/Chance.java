@@ -22,6 +22,7 @@
  */
 package br.com.fidias.chance4j;
 
+import br.com.fidias.chance4j.miscellaneous.GuidOptions;
 import br.com.fidias.chance4j.person.AgeOptions;
 import br.com.fidias.chance4j.person.Cnpj;
 import br.com.fidias.chance4j.person.CnpjOptions;
@@ -49,6 +50,7 @@ import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.Date;
 import java.util.Locale;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.math3.random.MersenneTwister;
 import org.apache.commons.math3.random.RandomDataGenerator;
@@ -2008,5 +2010,47 @@ public class Chance {
     public String timestampAsText(int year, String pattern)
             throws ChanceException {
         return timestampAsText(year, pattern, Locale.getDefault());
+    }
+
+    /**
+     * Generates a random UUID of the specified version.<br> Usage:
+     * <pre>
+     * chance.guid(GuidOptions.GuidVersion.VERSION_1); 
+     * =&gt e3a57693-0e4e-531c-89d4-1b1bbb677e18
+     * </pre>
+     * 
+     * UUID version 5 is default version.<br> Usage:
+     * <pre>
+     * chance.guid();
+     * </pre>
+     * 
+     * @param version GuidOptions.GuidVersion
+     * @return A random version 5 UUID
+     */
+    public String guid(GuidOptions.GuidVersion version) {
+        
+        final String delimiter = "-";
+        
+        String guid = RandomStringUtils.random(8, GuidOptions.GUID_POOL) + delimiter
+                + RandomStringUtils.random(4, GuidOptions.GUID_POOL) + delimiter
+                + version.getValue()
+                + RandomStringUtils.random(3, GuidOptions.GUID_POOL) + delimiter
+                + RandomStringUtils.random(1, GuidOptions.VARIANT_POOL)
+                + RandomStringUtils.random(3, GuidOptions.GUID_POOL) + delimiter
+                + RandomStringUtils.random(12, GuidOptions.GUID_POOL);
+        
+        return guid;
+    }
+
+    /**
+     * Generates a random version 5 UUID.
+     * <pre>
+     * chance.guid(); =&gt e3a57693-0e4e-531c-89d4-1b1bbb677e18
+     * </pre>
+     *
+     * @return A random version 5 UUID
+     */
+    public String guid() {
+        return guid(GuidOptions.GuidVersion.VERSION_5);
     }
 }
